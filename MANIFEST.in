@@ -1,0 +1,6 @@
+include README.md
+include COPYING
+include ez_setup.py
+recursive-include inventory/templates *
+recursive-include docs *
+

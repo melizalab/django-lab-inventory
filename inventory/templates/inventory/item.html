@@ -1,0 +1,47 @@
+{% extends "inventory/base.html" %}
+
+{% block title %} meliza-lab : item : {{ item.name }} {% endblock %}
+
+{% block content %}
+
+<p class="lead">{{ item.name }}</p>
+
+<hr>
+
+<dl class="dl-horizontal">
+  <dt>vendor</dt>
+  <dd>
+    {% if item.vendor.url %}<a href="{{ item.vendor.url }}">{{ item.vendor }}</a>
+    {% else %}{{ item.vendor }}{% endif %}
+  </dd>
+  <dt>catalog</dt><dd>{{ item.catalog }}</dd>
+  <dt>manufacturer</dt>
+  <dd>
+    {% if item.manufacturer.url %}<a href="{{ item.manufacturer.url }}">{{ item.manufacturer }}</a>
+    {% else %}{{ item.manufacturer }}{% endif %}
+  </dd>
+  <dt>part number</dt><dd>{{ item.manufacturer_number }}</dd>
+  <dt>unit size</dt><dd>{{ item.unit_size }}</dd>
+  <dt>unit price</dt><dd>${{ item.cost }}</dd>
+  <dt>quantity ordered</dt><dd>{{ item.units_purchased }}</dd>
+  <dt>total price</dt><dd>${{ item.total_price }}</dd>
+</dl>
+
+<dl class="dl-horizontal">
+  <dt>category</dt><dd>{{ item.category }}</dd>
+  <dt>arrival date</dt><dd>{{ item.date_arrived }}</dd>
+  <dt>serial #</dt><dd>{{ item.serial }}</dd>
+  <dt>location</dt><dd>{{ item.location }}</dd>
+  <dt>uva equipment #</dt><dd>{{ item.uva_equip }}</dd>
+  <dt>part of</dt><dd>{{ item.parent_item }}</dd>
+</dl>
+
+<dl class="dl-horizontal">
+  <dt>comments</dt><dd>{{ item.comments }}</dd>
+</dl>
+
+<hr>
+<a href="{% url 'admin:inventory_item_change' item.id %}">edit item</a><br/>
+
+
+{% endblock %}

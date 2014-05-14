@@ -1,0 +1,12 @@
+{% extends "inventory/base.html" %}
+
+{% block title %} meliza-lab : inventory {% endblock %}
+
+{% block content %}
+
+<p class='lead'>Some useful views for the inventory database:</p>
+
+<ul>
+<li><a href="{% url 'inventory:orders' %}">list orders</a></li>
+</ul>
+{% endblock %}
