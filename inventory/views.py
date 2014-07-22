@@ -20,6 +20,11 @@ class OrderView(generic.DetailView):
     model = Order
     template_name = 'inventory/order.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(OrderView, self).get_context_data(**kwargs)
+        context['items'] = context['order'].items.order_by("vendor")
+        return context
+
 
 class ItemView(generic.DetailView):
     model = Item

@@ -133,5 +133,8 @@ class Order(models.Model):
     def item_count(self):
         return self.items.count
 
+    def get_absolute_url(self):
+        return reverse("inventory:order", kwargs={'pk': self.pk})
+
     class Meta:
-        ordering = ['order_date', 'name']
+        ordering = ['-order_date', 'name']

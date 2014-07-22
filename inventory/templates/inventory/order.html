@@ -21,7 +21,7 @@ ordered: {{ order.ordered }}<br/>
     <th>Description</th>
   </thead>
   <tbody>
-    {% for item in order.items.iterator %}
+    {% for item in items.iterator %}
         <tr>
           <td>{% if item.vendor.url %}<a href="{{ item.vendor.url }}">{{ item.vendor }}</a>
               {% else %}{{ item.vendor }}{% endif %}</td>
