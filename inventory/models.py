@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import models
 import datetime
 
@@ -48,6 +49,9 @@ class Item(models.Model):
 
     def total_price(self):
         return self.cost * self.units_purchased
+
+    def get_absolute_url(self):
+        return reverse("inventory:item", kwargs={'pk': self.pk})
 
 
 class Category(models.Model):
