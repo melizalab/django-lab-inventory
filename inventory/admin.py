@@ -20,7 +20,7 @@ class ItemAdmin(admin.ModelAdmin):
         (None, {'fields': ['comments']})
     ]
 
-    list_display = ('name', 'category', 'date_added', 'date_arrived', 'location')
+    list_display = ('name', 'category', 'date_added', 'date_arrived', 'total_price', 'location')
     list_filter = ('category', 'vendor', 'manufacturer', 'date_added', 'date_arrived')
     search_fields = ('name', 'chem_formula', 'serial', 'manufacturer_number', 'comments')
     inlines = [
