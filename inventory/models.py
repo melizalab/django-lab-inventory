@@ -48,7 +48,7 @@ class Item(models.Model):
                            self.unit)
 
     def total_price(self):
-        return self.cost * self.units_purchased
+        return (self.cost or 0) * self.units_purchased
 
     def get_absolute_url(self):
         return reverse("inventory:item", kwargs={'pk': self.pk})
