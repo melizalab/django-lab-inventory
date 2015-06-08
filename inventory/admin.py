@@ -44,7 +44,8 @@ admin.site.register(Order, OrderAdmin)
 
 
 class PTAOAdmin(admin.ModelAdmin):
-    fields = list_display = ('code', 'description')
+    fields = ('code', 'description', 'expires')
+    list_display = fields + ('active',)
 
 
 admin.site.register(PTAO, PTAOAdmin)

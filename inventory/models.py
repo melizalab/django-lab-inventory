@@ -106,6 +106,10 @@ class Vendor(models.Model):
 class PTAO(models.Model):
     code = models.CharField(max_length=64, unique=True)
     description = models.CharField(max_length=128)
+    expires = models.DateField(blank=True, null=True)
+
+    def active(self):
+        return datetime.date.today() < self.expires
 
     def __unicode__(self):
         return "%s (%s)" % (self.code, self.description)
