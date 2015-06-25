@@ -1,144 +1,141 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import datetime
+from django.conf import settings
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Item'
-        db.create_table(u'inventory_item', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('chem_formula', self.gf('django.db.models.fields.CharField')(max_length=45, null=True, blank=True)),
-            ('vendor', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['inventory.Vendor'])),
-            ('catalog', self.gf('django.db.models.fields.CharField')(max_length=45, null=True, blank=True)),
-            ('manufacturer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['inventory.Manufacturer'], null=True, blank=True)),
-            ('manufacturer_number', self.gf('django.db.models.fields.CharField')(max_length=45, null=True, blank=True)),
-            ('size', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=10, decimal_places=2, blank=True)),
-            ('unit', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['inventory.Unit'])),
-            ('units_purchased', self.gf('django.db.models.fields.IntegerField')()),
-            ('cost', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=10, decimal_places=2, blank=True)),
-            ('category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['inventory.Category'])),
-            ('date_added', self.gf('django.db.models.fields.DateField')(auto_now_add=True, blank=True)),
-            ('date_arrived', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('serial', self.gf('django.db.models.fields.CharField')(max_length=45, null=True, blank=True)),
-            ('uva_equip', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
-            ('location', self.gf('django.db.models.fields.CharField')(max_length=45, null=True, blank=True)),
-            ('parent_item', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['inventory.Item'], null=True, blank=True)),
-            ('expiry_years', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=4, decimal_places=2, blank=True)),
-            ('comments', self.gf('django.db.models.fields.TextField')(blank=True)),
-        ))
-        db.send_create_signal(u'inventory', ['Item'])
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    ]
 
-        # Adding model 'Category'
-        db.create_table(u'inventory_category', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=45)),
-        ))
-        db.send_create_signal(u'inventory', ['Category'])
-
-        # Adding model 'Unit'
-        db.create_table(u'inventory_unit', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=45)),
-        ))
-        db.send_create_signal(u'inventory', ['Unit'])
-
-        # Adding model 'Manufacturer'
-        db.create_table(u'inventory_manufacturer', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('url', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('rep', self.gf('django.db.models.fields.CharField')(max_length=45, null=True, blank=True)),
-            ('rep_phone', self.gf('django.db.models.fields.CharField')(max_length=16, null=True, blank=True)),
-            ('support_phone', self.gf('django.db.models.fields.CharField')(max_length=16, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'inventory', ['Manufacturer'])
-
-        # Adding model 'Vendor'
-        db.create_table(u'inventory_vendor', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('url', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('phone', self.gf('django.db.models.fields.CharField')(max_length=16, null=True, blank=True)),
-            ('rep', self.gf('django.db.models.fields.CharField')(max_length=45, null=True, blank=True)),
-            ('rep_phone', self.gf('django.db.models.fields.CharField')(max_length=16, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'inventory', ['Vendor'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Item'
-        db.delete_table(u'inventory_item')
-
-        # Deleting model 'Category'
-        db.delete_table(u'inventory_category')
-
-        # Deleting model 'Unit'
-        db.delete_table(u'inventory_unit')
-
-        # Deleting model 'Manufacturer'
-        db.delete_table(u'inventory_manufacturer')
-
-        # Deleting model 'Vendor'
-        db.delete_table(u'inventory_vendor')
-
-
-    models = {
-        u'inventory.category': {
-            'Meta': {'ordering': "[u'name']", 'object_name': 'Category'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '45'})
-        },
-        u'inventory.item': {
-            'Meta': {'object_name': 'Item'},
-            'catalog': ('django.db.models.fields.CharField', [], {'max_length': '45', 'null': 'True', 'blank': 'True'}),
-            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['inventory.Category']"}),
-            'chem_formula': ('django.db.models.fields.CharField', [], {'max_length': '45', 'null': 'True', 'blank': 'True'}),
-            'comments': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'cost': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
-            'date_added': ('django.db.models.fields.DateField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'date_arrived': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'expiry_years': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '4', 'decimal_places': '2', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'location': ('django.db.models.fields.CharField', [], {'max_length': '45', 'null': 'True', 'blank': 'True'}),
-            'manufacturer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['inventory.Manufacturer']", 'null': 'True', 'blank': 'True'}),
-            'manufacturer_number': ('django.db.models.fields.CharField', [], {'max_length': '45', 'null': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'parent_item': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['inventory.Item']", 'null': 'True', 'blank': 'True'}),
-            'serial': ('django.db.models.fields.CharField', [], {'max_length': '45', 'null': 'True', 'blank': 'True'}),
-            'size': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
-            'unit': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['inventory.Unit']"}),
-            'units_purchased': ('django.db.models.fields.IntegerField', [], {}),
-            'uva_equip': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
-            'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['inventory.Vendor']"})
-        },
-        u'inventory.manufacturer': {
-            'Meta': {'ordering': "[u'name']", 'object_name': 'Manufacturer'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            'rep': ('django.db.models.fields.CharField', [], {'max_length': '45', 'null': 'True', 'blank': 'True'}),
-            'rep_phone': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
-            'support_phone': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'})
-        },
-        u'inventory.unit': {
-            'Meta': {'ordering': "[u'name']", 'object_name': 'Unit'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '45'})
-        },
-        u'inventory.vendor': {
-            'Meta': {'ordering': "[u'name']", 'object_name': 'Vendor'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            'phone': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
-            'rep': ('django.db.models.fields.CharField', [], {'max_length': '45', 'null': 'True', 'blank': 'True'}),
-            'rep_phone': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'})
-        }
-    }
-
-    complete_apps = ['inventory']
+    operations = [
+        migrations.CreateModel(
+            name='Category',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('name', models.CharField(max_length=45)),
+            ],
+            options={
+                'ordering': ['name'],
+                'verbose_name_plural': 'categories',
+            },
+        ),
+        migrations.CreateModel(
+            name='Item',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('name', models.CharField(max_length=128)),
+                ('chem_formula', models.CharField(max_length=45, blank=True, null=True, verbose_name='Chemical formula')),
+                ('catalog', models.CharField(max_length=45, blank=True, null=True, verbose_name='Catalog number')),
+                ('manufacturer_number', models.CharField(max_length=45, blank=True, null=True)),
+                ('size', models.DecimalField(max_digits=10, blank=True, null=True, decimal_places=2, verbose_name='Size of unit')),
+                ('units_purchased', models.IntegerField()),
+                ('cost', models.DecimalField(max_digits=10, blank=True, null=True, decimal_places=2, verbose_name='Cost per unit')),
+                ('date_added', models.DateField(auto_now_add=True)),
+                ('date_arrived', models.DateField(blank=True, null=True)),
+                ('serial', models.CharField(max_length=45, blank=True, null=True, verbose_name='Serial number')),
+                ('uva_equip', models.CharField(max_length=32, blank=True, null=True, verbose_name='UVa equipment number')),
+                ('location', models.CharField(max_length=45, blank=True, null=True)),
+                ('expiry_years', models.DecimalField(max_digits=4, blank=True, null=True, decimal_places=2, verbose_name='Warranty or Item expiration (y)')),
+                ('comments', models.TextField(blank=True)),
+                ('category', models.ForeignKey(to='inventory.Category')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Manufacturer',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('name', models.CharField(max_length=64)),
+                ('url', models.CharField(max_length=64, blank=True, null=True)),
+                ('rep', models.CharField(max_length=45, blank=True, null=True)),
+                ('rep_phone', models.CharField(max_length=16, blank=True, null=True)),
+                ('support_phone', models.CharField(max_length=16, blank=True, null=True)),
+            ],
+            options={
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
+            name='Order',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('name', models.CharField(max_length=64)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('ordered', models.BooleanField()),
+                ('order_date', models.DateField(default=datetime.date.today)),
+                ('reconciled', models.BooleanField()),
+                ('items', models.ManyToManyField(to='inventory.Item', blank=True)),
+                ('ordered_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'ordering': ['-order_date', 'name'],
+            },
+        ),
+        migrations.CreateModel(
+            name='PTAO',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('code', models.CharField(unique=True, max_length=64)),
+                ('description', models.CharField(max_length=128)),
+                ('expires', models.DateField(blank=True, null=True)),
+            ],
+            options={
+                'ordering': ['code'],
+                'verbose_name': 'PTAO',
+                'verbose_name_plural': 'PTAOs',
+            },
+        ),
+        migrations.CreateModel(
+            name='Unit',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('name', models.CharField(max_length=45)),
+            ],
+            options={
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
+            name='Vendor',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('name', models.CharField(max_length=64)),
+                ('url', models.CharField(max_length=64, blank=True, null=True)),
+                ('phone', models.CharField(max_length=16, blank=True, null=True)),
+                ('rep', models.CharField(max_length=45, blank=True, null=True)),
+                ('rep_phone', models.CharField(max_length=16, blank=True, null=True)),
+            ],
+            options={
+                'ordering': ['name'],
+            },
+        ),
+        migrations.AddField(
+            model_name='order',
+            name='ptao',
+            field=models.ForeignKey(to='inventory.PTAO', null=True, blank=True),
+        ),
+        migrations.AddField(
+            model_name='item',
+            name='manufacturer',
+            field=models.ForeignKey(to='inventory.Manufacturer', null=True, blank=True),
+        ),
+        migrations.AddField(
+            model_name='item',
+            name='parent_item',
+            field=models.ForeignKey(to='inventory.Item', null=True, blank=True),
+        ),
+        migrations.AddField(
+            model_name='item',
+            name='unit',
+            field=models.ForeignKey(to='inventory.Unit'),
+        ),
+        migrations.AddField(
+            model_name='item',
+            name='vendor',
+            field=models.ForeignKey(to='inventory.Vendor'),
+        ),
+    ]
