@@ -39,7 +39,7 @@ class Item(models.Model):
                                        decimal_places=2, blank=True, null=True)
     comments = models.TextField(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def unit_size(self):
@@ -57,7 +57,7 @@ class Item(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=45)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -68,7 +68,7 @@ class Category(models.Model):
 class Unit(models.Model):
     name = models.CharField(max_length=45)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -82,7 +82,7 @@ class Manufacturer(models.Model):
     rep_phone = models.CharField(max_length=16, blank=True, null=True)
     support_phone = models.CharField(max_length=16, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -96,7 +96,7 @@ class Vendor(models.Model):
     rep = models.CharField(max_length=45, blank=True, null=True)
     rep_phone = models.CharField(max_length=16, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -111,7 +111,7 @@ class PTAO(models.Model):
     def active(self):
         return datetime.date.today() < self.expires
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s (%s)" % (self.code, self.description)
 
     class Meta:
@@ -130,7 +130,7 @@ class Order(models.Model):
     ordered_by = models.ForeignKey(User)
     reconciled = models.BooleanField()
 
-    def __unicode__(self):
+    def __str__(self):
         if self.ordered:
             status = self.order_date
         else:
