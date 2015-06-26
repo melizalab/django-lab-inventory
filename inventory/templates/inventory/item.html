@@ -14,13 +14,21 @@
     {% if item.vendor.url %}<a href="{{ item.vendor.url }}">{{ item.vendor }}</a>
     {% else %}{{ item.vendor }}{% endif %}
   </dd>
-  <dt>catalog</dt><dd>{{ item.catalog }}</dd>
+  <dt>catalog</dt>
+  <dd>
+    {% if item.vendor_url %}<a href="{{ item.vendor_url }}">{{ item.catalog }}</a>
+    {% else %}{{ item.catalog }}{% endif %}
+  </dd>
   <dt>manufacturer</dt>
   <dd>
     {% if item.manufacturer.url %}<a href="{{ item.manufacturer.url }}">{{ item.manufacturer }}</a>
     {% else %}{{ item.manufacturer }}{% endif %}
   </dd>
-  <dt>part number</dt><dd>{{ item.manufacturer_number }}</dd>
+  <dt>part number</dt>
+  <dd>
+    {% if item.mfg_url %}<a href="{{ item.mfg_url }}">{{ item.manufacturer_number }}</a>
+    {% else %}{{ item.manufacturer_number }}{% endif %}
+  </dd>
   <dt>unit size</dt><dd>{{ item.unit_size }}</dd>
 </dl>
 

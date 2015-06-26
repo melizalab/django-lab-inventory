@@ -24,9 +24,14 @@ ordered: {{ order.ordered }}<br/>
   <tbody>
     {% for oit in lineitems.iterator %}
         <tr>
-          <td>{% if oit.item.vendor.url %}<a href="{{ oit.item.vendor.url }}">{{ oit.item.vendor }}</a>
-              {% else %}{{ oit.item.vendor }}{% endif %}</td>
-          <td>{{ oit.item.catalog }}</td>
+          <td>
+            {% if oit.item.vendor.url %}<a href="{{ oit.item.vendor.url }}">{{ oit.item.vendor }}</a>
+            {% else %}{{ oit.item.vendor }}{% endif %}
+          </td>
+          <td>
+            {% if oit.item.vendor_url %}<a href="{{ oit.item.vendor_url }}">{{ oit.item.catalog }}</a>
+            {% else %}{{ oit.item.catalog }}{% endif %}
+          </td>
           <td>{{ oit.item.unit_size }}</td>
           <td>{{ oit.cost }}</td>
           <td>{{ oit.units_purchased }}</td>

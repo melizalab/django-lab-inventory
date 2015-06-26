@@ -32,7 +32,9 @@ class Unit(models.Model):
 class Manufacturer(models.Model):
     name = models.CharField(max_length=64)
     url = models.CharField(max_length=64, blank=True, null=True)
-    rep = models.CharField(max_length=45, blank=True, null=True)
+    lookup_url = models.CharField(max_length=64, blank=True, null=True,
+                                  help_text="url pattern to look up part number")
+    rep = models.CharField(max_length=128, blank=True, null=True)
     rep_phone = models.CharField(max_length=16, blank=True, null=True)
     support_phone = models.CharField(max_length=16, blank=True, null=True)
 
@@ -46,6 +48,8 @@ class Manufacturer(models.Model):
 class Vendor(models.Model):
     name = models.CharField(max_length=64)
     url = models.CharField(max_length=64, blank=True, null=True)
+    lookup_url = models.CharField(max_length=128, blank=True, null=True,
+                                  help_text="url pattern to look up catalog number")
     phone = models.CharField(max_length=16, blank=True, null=True)
     rep = models.CharField(max_length=45, blank=True, null=True)
     rep_phone = models.CharField(max_length=16, blank=True, null=True)
@@ -106,6 +110,18 @@ class Item(models.Model):
 
     def total_price(self):
         return (self.cost or 0) * self.units_purchased
+
+    def vendor_url(self):
+        try:
+            return self.vendor.lookup_url % self.catalog
+        except (AttributeError, TypeError):
+            return None
+
+    def mfg_url(self):
+        try:
+            return self.manufacturer.lookup_url % self.manufacturer_number
+        except (AttributeError, TypeError):
+            return None
 
     def get_absolute_url(self):
         return reverse("inventory:item", kwargs={'pk': self.pk})
