@@ -22,23 +22,48 @@
   </dd>
   <dt>part number</dt><dd>{{ item.manufacturer_number }}</dd>
   <dt>unit size</dt><dd>{{ item.unit_size }}</dd>
-  <dt>unit price</dt><dd>${{ item.cost }}</dd>
-  <dt>quantity ordered</dt><dd>{{ item.units_purchased }}</dd>
-  <dt>total price</dt><dd>${{ item.total_price }}</dd>
 </dl>
 
 <dl class="dl-horizontal">
   <dt>category</dt><dd>{{ item.category }}</dd>
-  <dt>arrival date</dt><dd>{{ item.date_arrived }}</dd>
-  <dt>serial #</dt><dd>{{ item.serial }}</dd>
-  <dt>location</dt><dd>{{ item.location }}</dd>
-  <dt>uva equipment #</dt><dd>{{ item.uva_equip }}</dd>
   <dt>part of</dt><dd>{{ item.parent_item }}</dd>
 </dl>
 
 <dl class="dl-horizontal">
   <dt>comments</dt><dd>{{ item.comments }}</dd>
 </dl>
+
+<h3>Orders</h3>
+
+<table class="table table-striped table-condensed">
+  <thead>
+    <th>Order Date</th>
+    <th>Price</th>
+    <th>Quantity</th>
+    <th>Total Price</th>
+    <th>Arrival Date</th>
+    <th>Location</th>
+    <th>Serial</th>
+    <th>Equipment #</th>
+    <th></th>
+  </thead>
+  <tbody>
+    {% for oit in lineitems.iterator %}
+    <tr>
+      <td><a href="{% url 'inventory:order' oit.order.id %}">{{ oit.order.order_date }}</a></td>
+      <td>{{ oit.cost }}</td>
+      <td>{{ oit.units_purchased }}</td>
+      <td>{{ oit.total_price }}</td>
+      <td>{{ oit.date_arrived }}</td>
+      <td>{{ oit.location }}</td>
+      <td>{{ oit.serial }}</td>
+      <td>{{ oit.uva_equip }}</td>
+      <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}"
+             class="glyphicon glyphicon-edit" alt="[edit]" aria-label="[Edit]"></a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 <hr>
 <a href="{% url 'admin:inventory_item_change' item.id %}">edit item</a><br/>

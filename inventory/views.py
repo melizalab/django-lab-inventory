@@ -22,10 +22,15 @@ class OrderView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(OrderView, self).get_context_data(**kwargs)
-        context['items'] = context['order'].items.order_by("vendor")
+        context['lineitems'] = context['order'].orderitem_set.order_by("item__vendor")
         return context
 
 
 class ItemView(generic.DetailView):
     model = Item
     template_name = 'inventory/item.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemView, self).get_context_data(**kwargs)
+        context['lineitems'] = context['item'].orderitem_set.order_by("order__order_date")
+        return context

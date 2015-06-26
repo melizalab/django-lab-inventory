@@ -7,52 +7,6 @@ from django.core.urlresolvers import reverse
 from django.db import models
 import datetime
 
-class Item(models.Model):
-    name = models.CharField(max_length=128)
-    chem_formula = models.CharField('Chemical formula', max_length=45,
-                                    blank=True, null=True)
-
-    vendor = models.ForeignKey('Vendor')
-    catalog = models.CharField('Catalog number', max_length=45,
-                               blank=True, null=True)
-    manufacturer = models.ForeignKey('Manufacturer', blank=True, null=True)
-    manufacturer_number = models.CharField(max_length=45,
-                                           blank=True, null=True)
-    size = models.DecimalField('Size of unit',
-                               max_digits=10, decimal_places=2,
-                               blank=True, null=True)
-    unit = models.ForeignKey('Unit')
-    units_purchased = models.IntegerField()
-    cost = models.DecimalField('Cost per unit', max_digits=10, decimal_places=2,
-                               blank=True, null=True)
-    category = models.ForeignKey('Category')
-    date_added = models.DateField(auto_now_add=True)
-    date_arrived = models.DateField(blank=True, null=True)
-    serial = models.CharField('Serial number', max_length=45,
-                              blank=True, null=True)
-    uva_equip = models.CharField('UVa equipment number', max_length=32,
-                                 blank=True, null=True)
-    location = models.CharField(max_length=45,
-                                blank=True, null=True)
-    parent_item = models.ForeignKey('self', blank=True, null=True)
-    expiry_years = models.DecimalField('Warranty or Item expiration (y)', max_digits=4,
-                                       decimal_places=2, blank=True, null=True)
-    comments = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.name
-
-    def unit_size(self):
-        return "%s%s%s" % (self.size or "",
-                           "" if str(self.unit).startswith("/") else " ",
-                           self.unit)
-
-    def total_price(self):
-        return (self.cost or 0) * self.units_purchased
-
-    def get_absolute_url(self):
-        return reverse("inventory:item", kwargs={'pk': self.pk})
-
 
 class Category(models.Model):
     name = models.CharField(max_length=45)
@@ -120,15 +74,52 @@ class PTAO(models.Model):
         verbose_name_plural = "PTAOs"
 
 
+class Item(models.Model):
+    name = models.CharField(max_length=128)
+    chem_formula = models.CharField('Chemical formula', max_length=45,
+                                    blank=True, null=True)
+
+    vendor = models.ForeignKey(Vendor)
+    catalog = models.CharField('Catalog number', max_length=45,
+                               blank=True, null=True)
+    manufacturer = models.ForeignKey('Manufacturer', blank=True, null=True,
+                                     help_text="leave blank if unknown or same as vendor")
+    manufacturer_number = models.CharField(max_length=45,
+                                           blank=True, null=True)
+    size = models.DecimalField('Size of unit',
+                               max_digits=10, decimal_places=2,
+                               blank=True, null=True)
+    unit = models.ForeignKey(Unit)
+    category = models.ForeignKey(Category)
+    date_added = models.DateField(auto_now_add=True)
+    parent_item = models.ForeignKey('self', blank=True, null=True,
+                                    help_text="example: for printer cartriges, select printer")
+    comments = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def unit_size(self):
+        return "%s%s%s" % (self.size or "",
+                           "" if str(self.unit).startswith("/") else " ",
+                           self.unit)
+
+    def total_price(self):
+        return (self.cost or 0) * self.units_purchased
+
+    def get_absolute_url(self):
+        return reverse("inventory:item", kwargs={'pk': self.pk})
+
+
+
 class Order(models.Model):
     name = models.CharField(max_length=64)
     created = models.DateTimeField(auto_now_add=True)
-    items = models.ManyToManyField('Item', blank=True)
+    items = models.ManyToManyField(Item, through='OrderItem')
     ptao = models.ForeignKey(PTAO, blank=True, null=True)
     ordered = models.BooleanField()
     order_date = models.DateField(default=datetime.date.today)
     ordered_by = models.ForeignKey(User)
-    reconciled = models.BooleanField()
 
     def __str__(self):
         if self.ordered:
@@ -146,3 +137,39 @@ class Order(models.Model):
 
     class Meta:
         ordering = ['-order_date', 'name']
+
+
+class OrderItem(models.Model):
+    item  = models.ForeignKey(Item)
+    order = models.ForeignKey(Order)
+
+    units_purchased = models.IntegerField()
+    cost = models.DecimalField('Cost per unit', max_digits=10, decimal_places=2,
+                               blank=True, null=True)
+
+    date_arrived = models.DateField(blank=True, null=True)
+    serial = models.CharField('Serial number', max_length=45,
+                              blank=True, null=True)
+    uva_equip = models.CharField('UVa equipment number', max_length=32,
+                                 blank=True, null=True)
+    location = models.CharField(max_length=45, blank=True, null=True,
+                                help_text="example: -80 freezer, refrigerator, Gilmer 283")
+    expiry_years = models.DecimalField('Warranty or Item expiration (y)', max_digits=4,
+                                       decimal_places=2, blank=True, null=True)
+
+    reconciled = models.BooleanField()
+
+    def total_price(self):
+        return (self.cost or 0) * self.units_purchased
+
+    def name(self):
+        return self.item.name
+
+    def order_date(self):
+        return self.order.order_date
+
+    def __str__(self):
+        return "%s [%s]" % (self.item.name, self.order.order_date)
+
+    class Meta:
+        db_table = "inventory_order_items"

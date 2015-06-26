@@ -19,18 +19,21 @@ ordered: {{ order.ordered }}<br/>
     <th>Quantity</th>
     <th>Total Price</th>
     <th>Description</th>
+    <th></th>
   </thead>
   <tbody>
-    {% for item in items.iterator %}
+    {% for oit in lineitems.iterator %}
         <tr>
-          <td>{% if item.vendor.url %}<a href="{{ item.vendor.url }}">{{ item.vendor }}</a>
-              {% else %}{{ item.vendor }}{% endif %}</td>
-          <td>{{ item.catalog }}</td>
-          <td>{{ item.unit_size }}</td>
-          <td>{{ item.cost }}</td>
-          <td>{{ item.units_purchased }}</td>
-          <td>{{ item.total_price }}</td>
-          <td><a href="{% url 'inventory:item' item.id %}">{{ item.name }}</a></td>
+          <td>{% if oit.item.vendor.url %}<a href="{{ oit.item.vendor.url }}">{{ oit.item.vendor }}</a>
+              {% else %}{{ oit.item.vendor }}{% endif %}</td>
+          <td>{{ oit.item.catalog }}</td>
+          <td>{{ oit.item.unit_size }}</td>
+          <td>{{ oit.cost }}</td>
+          <td>{{ oit.units_purchased }}</td>
+          <td>{{ oit.total_price }}</td>
+          <td><a href="{% url 'inventory:item' oit.item.id %}">{{ oit.item.name }}</a></td>
+          <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}"
+                 class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></a></td>
         </tr>
     {% endfor %}
   </tbody>
