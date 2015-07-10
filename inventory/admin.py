@@ -19,7 +19,7 @@ class ItemAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'category', 'date_added',)
     list_filter = ('category', 'vendor', 'manufacturer', 'date_added')
-    search_fields = ('name', 'chem_formula', 'serial', 'manufacturer_number', 'comments')
+    search_fields = ('name', 'chem_formula', 'manufacturer_number', 'comments')
     inlines = (OrderItemInline,)
 
 admin.site.register(Item, ItemAdmin)
