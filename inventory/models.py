@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import models
 import datetime
 
@@ -86,20 +86,22 @@ class Item(models.Model):
     chem_formula = models.CharField('Chemical formula', max_length=45,
                                     blank=True, null=True)
 
-    vendor = models.ForeignKey(Vendor)
+    vendor = models.ForeignKey(Vendor, on_delete=models.PROTECT)
     catalog = models.CharField('Catalog number', max_length=45,
                                blank=True, null=True)
     manufacturer = models.ForeignKey('Manufacturer', blank=True, null=True,
+                                     on_delete=models.SET_NULL,
                                      help_text="leave blank if unknown or same as vendor")
     manufacturer_number = models.CharField(max_length=45,
                                            blank=True, null=True)
     size = models.DecimalField('Size of unit',
                                max_digits=10, decimal_places=2,
                                blank=True, null=True)
-    unit = models.ForeignKey(Unit)
-    category = models.ForeignKey(Category)
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
     date_added = models.DateField(auto_now_add=True)
     parent_item = models.ForeignKey('self', blank=True, null=True,
+                                    on_delete=models.SET_NULL,
                                     help_text="example: for printer cartriges, select printer")
     comments = models.TextField(blank=True)
 
@@ -135,10 +137,10 @@ class Order(models.Model):
     name = models.CharField(max_length=64)
     created = models.DateTimeField(auto_now_add=True)
     items = models.ManyToManyField(Item, through='OrderItem')
-    ptao = models.ForeignKey(PTAO, blank=True, null=True)
+    ptao = models.ForeignKey(PTAO, blank=True, null=True, on_delete=models.SET_NULL)
     ordered = models.BooleanField()
     order_date = models.DateField(default=datetime.date.today)
-    ordered_by = models.ForeignKey(User)
+    ordered_by = models.ForeignKey(User, on_delete=models.PROTECT)
 
     def __str__(self):
         if self.ordered:
@@ -159,8 +161,8 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    item  = models.ForeignKey(Item)
-    order = models.ForeignKey(Order)
+    item  = models.ForeignKey(Item, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
     units_purchased = models.IntegerField()
     cost = models.DecimalField('Cost per unit', max_digits=10, decimal_places=2,
