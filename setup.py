@@ -8,7 +8,7 @@ except ImportError:
     use_setuptools()
     from setuptools import setup
 
-VERSION = '0.3.1'
+VERSION = '0.3.2'
 cls_txt = """
 Development Status :: 3 - Alpha
 Framework :: Django
@@ -29,7 +29,7 @@ setup(
     author='C Daniel Meliza',
     author_email='dan@meliza@org',
     maintainer='C Daniel Meliza',
-    maintainer_email='dan@meliza.org',
+    maintainer_email='dan@meliza@org',
     url = "https://github.com/melizalab/django-lab-inventory",
     packages=['inventory'],
     include_package_data=True,
