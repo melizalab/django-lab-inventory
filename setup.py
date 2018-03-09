@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
 import os
-try:
-    from setuptools import setup
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
-    from setuptools import setup
+import sys
+if sys.hexversion < 0x02060000:
+    raise RuntimeError("Python 2.6 or higher required")
+from setuptools import setup
 
 VERSION = '0.3.4'
 cls_txt = """
