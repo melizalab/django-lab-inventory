@@ -36,6 +36,7 @@ class Manufacturer(models.Model):
                                   help_text="url pattern to look up part number")
     rep = models.CharField(max_length=128, blank=True, null=True)
     rep_phone = models.CharField(max_length=16, blank=True, null=True)
+    rep_email = models.CharField(max_length=64, blank=True, null=True)
     support_phone = models.CharField(max_length=16, blank=True, null=True)
 
     def __str__(self):
@@ -53,6 +54,7 @@ class Vendor(models.Model):
     phone = models.CharField(max_length=16, blank=True, null=True)
     rep = models.CharField(max_length=45, blank=True, null=True)
     rep_phone = models.CharField(max_length=16, blank=True, null=True)
+    rep_email = models.CharField(max_length=64, blank=True, null=True)
 
     def __str__(self):
         return self.name
