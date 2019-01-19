@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from inventory import views
 
+app_name = "inventory"
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^orders/$', views.OrdersView.as_view(), name='orders'),

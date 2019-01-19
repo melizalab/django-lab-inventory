@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('size', models.DecimalField(blank=True, null=True, verbose_name='Size of unit', decimal_places=2, max_digits=10)),
                 ('date_added', models.DateField(auto_now_add=True)),
                 ('comments', models.TextField(blank=True)),
-                ('category', models.ForeignKey(to='inventory.Category')),
+                ('category', models.ForeignKey(to='inventory.Category', on_delete=models.CASCADE)),
             ],
         ),
         migrations.CreateModel(
@@ -80,8 +80,8 @@ class Migration(migrations.Migration):
                 ('location', models.CharField(blank=True, max_length=45, help_text='example: -80 freezer, refrigerator, Gilmer 283', null=True)),
                 ('expiry_years', models.DecimalField(blank=True, null=True, verbose_name='Warranty or Item expiration (y)', decimal_places=2, max_digits=4)),
                 ('reconciled', models.BooleanField()),
-                ('item', models.ForeignKey(to='inventory.Item')),
-                ('order', models.ForeignKey(to='inventory.Order')),
+                ('item', models.ForeignKey(to='inventory.Item', on_delete=models.CASCADE)),
+                ('order', models.ForeignKey(to='inventory.Order', on_delete=models.CASCADE)),
             ],
             options={
                 'db_table': 'inventory_order_items',
@@ -134,31 +134,33 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='order',
             name='ordered_by',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='order',
             name='ptao',
-            field=models.ForeignKey(blank=True, to='inventory.PTAO', null=True),
+            field=models.ForeignKey(blank=True, to='inventory.PTAO', null=True, on_delete=models.SET_NULL),
         ),
         migrations.AddField(
             model_name='item',
             name='manufacturer',
-            field=models.ForeignKey(help_text='leave blank if unknown or same as vendor', blank=True, to='inventory.Manufacturer', null=True),
+            field=models.ForeignKey(help_text='leave blank if unknown or same as vendor', blank=True,
+                                    to='inventory.Manufacturer', null=True, on_delete=models.SET_NULL),
         ),
         migrations.AddField(
             model_name='item',
             name='parent_item',
-            field=models.ForeignKey(help_text='example: for printer cartriges, select printer', blank=True, to='inventory.Item', null=True),
+            field=models.ForeignKey(help_text='example: for printer cartriges, select printer', blank=True,
+                                    to='inventory.Item', null=True, on_delete=models.SET_NULL),
         ),
         migrations.AddField(
             model_name='item',
             name='unit',
-            field=models.ForeignKey(to='inventory.Unit'),
+            field=models.ForeignKey(to='inventory.Unit', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='item',
             name='vendor',
-            field=models.ForeignKey(to='inventory.Vendor'),
+            field=models.ForeignKey(to='inventory.Vendor', on_delete=models.CASCADE),
         ),
     ]
