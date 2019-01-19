@@ -6,7 +6,7 @@ if sys.hexversion < 0x02060000:
     raise RuntimeError("Python 2.6 or higher required")
 from setuptools import setup
 
-VERSION = '0.3.4'
+VERSION = '0.4.0'
 cls_txt = """
 Development Status :: 3 - Alpha
 Framework :: Django
@@ -26,7 +26,7 @@ setup(
     classifiers=[x for x in cls_txt.split("\n") if x],
     author='C Daniel Meliza',
     maintainer='C Daniel Meliza',
-    url = "https://github.com/melizalab/django-lab-inventory",
+    url="https://github.com/melizalab/django-lab-inventory",
     packages=['inventory'],
     include_package_data=True,
 )
