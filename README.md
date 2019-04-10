@@ -23,7 +23,7 @@ INSTALLED_APPS = (
 2. Include the inventory URLconf in your project urls.py like this::
 
 ```python
-url(r'^inventory/', include(inventory.urls')),
+url(r'^inventory/', include('inventory.urls')),
 ```
 
 3. Run `python manage.py migrate` to create the inventory models.
