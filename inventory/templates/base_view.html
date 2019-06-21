@@ -45,16 +45,7 @@
             {% if user.is_authenticated %}
             <li><a href="/wiki/">Wiki</a></li>
             <li><a href="{% url 'inventory:index' %}">Inventory</a></li>
-            <li><a href="{% url 'birds:index' %}">Birds</a></li>
             <li><a href="{% url 'admin:index' %}">Database Admin</a></li>
-            <li><a href="https://aplonis.psyc.virginia.edu/decide/">Operant Control Panel</a></li>
-            {% endif %}
-          </ul>
-          <ul class="nav navbar-nav pull-right">
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'logout' %}?next={{ request.path }}">welcome, <strong>{{ user.username }}</strong></a></li>
-            {% else %}
-            <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
             {% endif %}
           </ul>
           {% endblock %}
