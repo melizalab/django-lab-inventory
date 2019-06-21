@@ -4,6 +4,8 @@ python3 -m venv .venv
 # source virtual environment
 source .venv/bin/activate
 
+# optionally customize inventory/templates/base_view.html
+
 # install inventory
 pip install -e .
 
@@ -15,9 +17,6 @@ django-admin startproject invexample
 
 # enter project folder
 cd invexample
-
-# copy "base_view.html" to project and then customize
-#cp ../base_view.html .
 
 # add the "inventory" app to the project's settings.py
 sed -ie "/INSTALLED_APPS = \[/a \ \ \ \ 'inventory'," invexample/settings.py
