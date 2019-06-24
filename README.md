@@ -23,7 +23,7 @@ INSTALLED_APPS = (
 2. Include the inventory URLconf in your project urls.py like this::
 
 ```python
-url(r'^inventory/', include('inventory.urls')),
+re_path(r'^inventory/', include('inventory.urls')),
 ```
 
 3. Run `python manage.py migrate` to create the inventory models.
@@ -32,3 +32,7 @@ url(r'^inventory/', include('inventory.urls')),
    to create items, vendors, manufacturers, etc. (you'll need the Admin app enabled).
 
 5. Visit http://127.0.0.1:8000/inventory/ to use views.
+
+### Bash example
+
+Run [`sh example.sh`](example.sh) to create and run an example of django-lab-inventory.
