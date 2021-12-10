@@ -9,6 +9,7 @@ import datetime
 
 
 class Category(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45)
 
     def __str__(self):
@@ -20,6 +21,7 @@ class Category(models.Model):
 
 
 class Unit(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45)
 
     def __str__(self):
@@ -30,6 +32,7 @@ class Unit(models.Model):
 
 
 class Manufacturer(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64)
     url = models.CharField(max_length=64, blank=True, null=True)
     lookup_url = models.CharField(max_length=64, blank=True, null=True,
@@ -47,6 +50,7 @@ class Manufacturer(models.Model):
 
 
 class Vendor(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64)
     url = models.CharField(max_length=64, blank=True, null=True)
     lookup_url = models.CharField(max_length=128, blank=True, null=True,
@@ -64,6 +68,7 @@ class Vendor(models.Model):
 
 
 class PTAO(models.Model):
+    id = models.AutoField(primary_key=True)
     code = models.CharField(max_length=64, unique=True)
     description = models.CharField(max_length=128)
     expires = models.DateField(blank=True, null=True)
@@ -84,6 +89,7 @@ class PTAO(models.Model):
 
 
 class Item(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128)
     chem_formula = models.CharField('Chemical formula', max_length=45,
                                     blank=True, null=True)
@@ -136,6 +142,7 @@ class Item(models.Model):
 
 
 class Order(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64)
     created = models.DateTimeField(auto_now_add=True)
     items = models.ManyToManyField(Item, through='OrderItem')
@@ -163,6 +170,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
+    id = models.AutoField(primary_key=True)
     item  = models.ForeignKey(Item, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
 

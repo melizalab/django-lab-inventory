@@ -1,11 +1,11 @@
-from django.conf.urls import url
+from django.conf.urls import re_path
 
 from inventory import views
 
 app_name = "inventory"
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^orders/$', views.OrdersView.as_view(), name='orders'),
-    url(r'^orders/(?P<pk>\d+)/$', views.OrderView.as_view(), name='order'),
-    url(r'^items/(?P<pk>\d+)/$', views.ItemView.as_view(), name='item')
+    re_path(r'^$', views.index, name='index'),
+    re_path(r'^orders/$', views.OrdersView.as_view(), name='orders'),
+    re_path(r'^orders/(?P<pk>\d+)/$', views.OrderView.as_view(), name='order'),
+    re_path(r'^items/(?P<pk>\d+)/$', views.ItemView.as_view(), name='item')
 ]
