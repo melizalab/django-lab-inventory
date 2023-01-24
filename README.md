@@ -5,11 +5,13 @@ lab-inventory is a Django application used to track inventory and orders in the 
 
 The admin interface is the primary tool used to create and update item records, but there is a growing collection of views that can be used to browse the database and generate orders in a format that can be sent off to our purchasing department.
 
-lab-inventory is licensed for you to use under the Gnu Public License, version 3. See COPYING for details
+lab-inventory is licensed for you to use under the BSD 3-Clause License. See COPYING for details
 
 ### Quick start
 
-1. Install the package from source: `python setup.py install`. Worth putting in a virtualenv.
+1. Requires Python 3.8+ and Django 4.0+
+
+1. Install the package from pypi: `pip install django-labl-inventory`. Worth putting in a virtualenv.
 
 1. Add `inventory` to your INSTALLED_APPS setting like this:
 
@@ -35,4 +37,4 @@ re_path(r'^inventory/', include('inventory.urls')),
 
 ### Bash example
 
-Run [`sh example.sh`](example.sh) to create and run an example of django-lab-inventory.
+Run [`sh example.sh`](example.sh) to create and run an example of django-lab-inventory. This is very outdated.
