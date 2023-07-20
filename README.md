@@ -11,7 +11,7 @@ lab-inventory is licensed for you to use under the BSD 3-Clause License. See COP
 
 1. Requires Python 3.8+ and Django 4.0+
 
-1. Install the package from pypi: `pip install django-labl-inventory`. Worth putting in a virtualenv.
+1. Install the package from pypi: `pip install django-lab-inventory`. Worth putting in a virtualenv.
 
 1. Add `inventory` to your INSTALLED_APPS setting like this:
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -7,7 +8,7 @@ from django.views import generic
 import django_filters as filters
 from django_filters.views import FilterView
 
-from inventory.models import Order, Item
+from inventory.models import Order, Item, Account
 
 
 def index(request):
@@ -15,16 +16,29 @@ def index(request):
 
 
 class OrderFilter(filters.FilterSet):
+    name = filters.CharFilter(field_name="name", lookup_expr="icontains")
     ordered_by = filters.CharFilter(
         field_name="ordered_by__username", lookup_expr="istartswith"
     )
     account = filters.CharFilter(
         field_name="account__description", lookup_expr="icontains"
     )
+    # ordered_by = filters.ModelChoiceFilter(
+    #     field_name="ordered_by",
+    #     queryset=User.objects.all(),
+    #     label="User",
+    #     to_field_name="username",
+    # )
+    # account = filters.ModelChoiceFilter(
+    #     field_name="account",
+    #     queryset=Account.objects.all(),
+    #     label="Account",
+    #     to_field_name="description",
+    # )
 
     class Meta:
         model = Order
-        fields = {"name": ["icontains"]}
+        fields = ["name", "ordered_by", "account"]
 
 
 class OrderList(FilterView):

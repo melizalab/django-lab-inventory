@@ -6,7 +6,22 @@
 {% block content %}
 <h2>Orders</h2>
 
-<p><a href="{% url 'admin:inventory_order_add' %}">add new order</a></p>
+<form class="form-horizontal" method="get" role="form">
+  <div class="form-group">
+    <div class="col-sm-2">
+      {% render_field filter.form.name placeholder="Name" class+="form-control" %}
+    </div>
+    <div class="col-sm-2">
+      {% render_field filter.form.ordered_by placeholder="Ordered by" class+="form-control" %}
+    </div>
+    <div class="col-sm-2">
+      {% render_field filter.form.account placeholder="Account" class+="form-control" %}
+    </div>
+    <button type="submit" class="btn btn-primary">
+      <span class="glyphicon glyphicon-search"></span> Search
+    </button>
+  </div>
+</form>
 
 {% include "inventory/order_table.html" %}
 <div class="pagination">
