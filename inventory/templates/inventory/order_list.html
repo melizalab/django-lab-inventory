@@ -8,15 +8,11 @@
 
 <form class="form-horizontal" method="get" role="form">
   <div class="form-group">
+    {% for field in filter.form %}
     <div class="col-sm-2">
-      {% render_field filter.form.name placeholder="Name" class+="form-control" %}
+      {% render_field field placeholder=field.label class+="form-control" %}
     </div>
-    <div class="col-sm-2">
-      {% render_field filter.form.ordered_by placeholder="Ordered by" class+="form-control" %}
-    </div>
-    <div class="col-sm-2">
-      {% render_field filter.form.account placeholder="Account" class+="form-control" %}
-    </div>
+    {% endfor %}
     <button type="submit" class="btn btn-primary">
       <span class="glyphicon glyphicon-search"></span> Search
     </button>
@@ -39,6 +35,8 @@
         {% endif %}
     </span>
 </div>
+
+<p><a href="">add new order</a></p>
 
 {% endblock %}
 

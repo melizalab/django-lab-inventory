@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<p class="lead">{{ item.name }}</p>
+<h2>{{ item.name }}</h2>
 
 <hr>
 
@@ -75,6 +75,7 @@
 
 <hr>
 <a href="{% url 'admin:inventory_item_change' item.id %}">edit item</a><br/>
+<a href="{% url 'inventory:items' %}">back to item list</a>
 
 
 {% endblock %}

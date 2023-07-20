@@ -8,8 +8,7 @@
 
 <ul>
   <li><a href="{% url 'inventory:orders' %}">list and search orders</a></li>
-  <li><a href="{% url 'admin:inventory_item_changelist' %}">list or edit items</a></li>
-  <li><a href="{% url 'admin:inventory_order_changelist' %}">list or edit orders</a></li>
+  <li><a href="{% url 'inventory:items' %}">list and search items</a></li>
 </ul>
 
 <p>To order something, you create an order and assign items to it. When an item is added to an order, you enter per-order information like price and quantity. If an item doesn't exist in the database, you'll need to create it and then add it to the order. </p>

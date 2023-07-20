@@ -1,0 +1,78 @@
+{% extends "base_view.html" %}
+{% load widget_tweaks %}
+
+{% block title %} meliza-lab : items {% endblock %}
+
+{% block content %}
+<h2>Items</h2>
+
+<form class="form-horizontal" method="get" role="form">
+  <div class="form-group">
+    {% for field in filter.form %}
+    <div class="col-sm-2">
+      {% render_field field placeholder=field.label class+="form-control" %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">
+      <span class="glyphicon glyphicon-search"></span> Search
+    </button>
+  </div>
+</form>
+
+<table class="table table-striped table-condensed">
+  <thead>
+    <th>Description</th>
+    <th>Unit</th>
+    <th>Vendor</th>
+    <th>Catalog number</th>
+    <th>Manufacturer</th>
+    <th>Part Number</th>
+    <th>Category</th>
+  </thead>
+  <tbody>
+    {% for item in item_list %}
+        <tr>
+          <td><a href="{% url 'inventory:item' item.id %}">{{ item.name }}</a></td>
+          <td>{{ item.unit_size }}</td>
+          <td>
+            {% if item.vendor.url %}<a href="{{ item.vendor.url }}">{{ item.vendor }}</a>
+            {% else %}{{ item.vendor }}{% endif %}
+          </td>
+          <td>
+            {% if item.vendor_url %}<a href="{{ item.vendor_url }}">{{ item.catalog }}</a>
+            {% else %}{{ item.catalog }}{% endif %}
+          </td>
+          <td>
+            {% if item.manufacturer.url %}<a href="{{ item.manufacturer.url }}">{{ item.manufacturer }}</a>
+            {% else %}{{ item.manufacturer }}{% endif %}
+          </td>
+          <td>
+            {% if item.manufacturer_url %}<a href="{{ item.manufacturer_url }}">{{ item.catalog }}</a>
+            {% else %}{{ item.manufacturer_number }}{% endif %}
+          </td>
+          <td>{{ item.category }}</td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?{{ query.urlencode }}&amp;page={{ page_obj.previous_page_number }}">previous</a> |
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            | <a href="?{{ query.urlencode }}&amp;page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+<p><a href="">add new item</a></p>
+
+{% endblock %}
+
