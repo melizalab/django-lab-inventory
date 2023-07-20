@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h2>{{ item.name }}</h2>
+<h2>item: {{ item.name }}</h2>
 
 <hr>
 
@@ -41,7 +41,7 @@
   <dt>comments</dt><dd>{{ item.comments }}</dd>
 </dl>
 
-<h3>Orders</h3>
+<h3>orders</h3>
 
 <table class="table table-striped table-condensed">
   <thead>
@@ -74,8 +74,9 @@
 </table>
 
 <hr>
-<a href="{% url 'admin:inventory_item_change' item.id %}">edit item</a><br/>
-<a href="{% url 'inventory:items' %}">back to item list</a>
+<a href="{% url 'inventory:items' %}">back to item list</a></br>
+<a href="{% url 'inventory:add_item_to_order' item.id %}">add this item to an order</a><br/>
+<a href="{% url 'admin:inventory_item_change' item.id %}">edit item (advanced users only)</a><br/>
 
 
 {% endblock %}

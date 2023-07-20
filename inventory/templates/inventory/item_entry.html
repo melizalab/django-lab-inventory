@@ -1,0 +1,42 @@
+{% extends "base_view.html" %}
+{% load widget_tweaks %}
+
+{% block title %} meliza-lab : new item  {% endblock %}
+
+{% block content %}
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Create a new item</h3>
+  </div>
+  <div class="panel-body">
+    <form action="{% url 'inventory:new_item' %}" class="form-horizontal" method="post" role="form">
+      {% csrf_token %}
+      <p><strong>Instructions</strong>: This form is used to create a new item. Items are specific things or services sold by vendors. 
+      After the item is created, you can add it to an order.</p>
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      {% for field in form %}
+      <div class="form-group {% if field.errors %}has-error{% endif %}">
+        <label for="{{field.auto_id}}" class="col-sm-2 control-label">{{ field.label }}</label>
+        <div class="col-sm-5">
+          {% render_field field class+="form-control" %}
+        </div>
+      </div>
+      {% endfor %}
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-default">Create item</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 from inventory.models import Item, Order
-from inventory.forms import NewOrderForm
+from inventory.forms import NewOrderForm, NewItemForm
 
 
 def index(request):
@@ -137,3 +137,15 @@ class ItemView(generic.DetailView):
             "order__order_date"
         )
         return context
+
+
+class ItemEntry(generic.FormView):
+    template_name = "inventory/item_entry.html"
+    form_class = NewItemForm
+
+    def form_valid(self, form):
+        item = form.save()
+        order = form.cleaned_data["order"]
+        if order is not None:
+            print("TODO: redirect to form for associating items with orders")
+        return HttpResponseRedirect(reverse("inventory:item", args=(item.id,)))

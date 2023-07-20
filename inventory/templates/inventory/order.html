@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<h2>{{ order.name }}</h2>
+<h2>order: {{ order.name }}</h2>
 <hr>
 
 <dl class="dl-horizontal">
@@ -15,22 +15,23 @@
   <dt>ordered</dt><dd>{{ order.ordered }}</dd>
 </dl>
 
-<h3>Items</h3>
+<h3>items</h3>
 
 <table class="table table-striped table-condensed">
   <thead>
+    <th>Description</th>
     <th>Vendor</th>
     <th>Catalog</th>
     <th>Unit</th>
     <th>Price</th>
     <th>Quantity</th>
     <th>Total Price</th>
-    <th>Description</th>
     <th></th>
   </thead>
   <tbody>
     {% for oit in orderitem_list %}
         <tr>
+          <td><a href="{% url 'inventory:item' oit.item.id %}">{{ oit.item.name }}</a></td>
           <td>
             {% if oit.item.vendor.url %}<a href="{{ oit.item.vendor.url }}">{{ oit.item.vendor }}</a>
             {% else %}{{ oit.item.vendor }}{% endif %}
@@ -43,7 +44,6 @@
           <td>{{ oit.cost }}</td>
           <td>{{ oit.units_purchased }}</td>
           <td>{{ oit.total_price }}</td>
-          <td><a href="{% url 'inventory:item' oit.item.id %}">{{ oit.item.name }}</a></td>
           <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}"
                  class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></a></td>
         </tr>
@@ -54,7 +54,7 @@
 
 <hr>
 
-To add items to this order, search the <a href="{% url 'inventory:items' %}">items list</a> or <a href="">add a new item</a><br/>
+To add items to this order, search the <a href="{% url 'inventory:items' %}">items list</a> or <a href="{% url 'inventory:new_item' %}">add a new item</a><br/>
 <a href="{% url 'inventory:orders' %}">back to order list</a><br/>
 <a href="{% url 'admin:inventory_order_change' order.id %}">edit order (advanced users only)</a><br/>
 
