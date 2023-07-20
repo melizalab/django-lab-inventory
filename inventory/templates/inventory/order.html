@@ -51,8 +51,11 @@
   </tbody>
 </table>
 
+
 <hr>
-<a href="{% url 'admin:inventory_order_change' order.id %}">edit order</a><br/>
-<a href="{% url 'inventory:orders' %}">back to order list</a>
+
+To add items to this order, search the <a href="{% url 'inventory:items' %}">items list</a> or <a href="">add a new item</a><br/>
+<a href="{% url 'inventory:orders' %}">back to order list</a><br/>
+<a href="{% url 'admin:inventory_order_change' order.id %}">edit order (advanced users only)</a><br/>
 
 {% endblock %}

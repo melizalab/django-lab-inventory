@@ -5,8 +5,11 @@ from django.db.models import Q
 from django.shortcuts import render
 from django.views import generic
 from django_filters.views import FilterView
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from inventory.models import Item, Order
+from inventory.forms import NewOrderForm
 
 
 def index(request):
@@ -17,6 +20,7 @@ class PaginatedFilterView(FilterView):
     paginate_by = 25
 
     def get_context_data(self, **kwargs):
+        # This strips the page from the query parameters; otherwise pagination leads to ever-growing URL
         context = super().get_context_data(**kwargs)
         context["query"] = self.request.GET.copy()
         try:
@@ -98,6 +102,22 @@ class OrderView(generic.DetailView):
             "item__vendor"
         )
         return context
+
+
+class OrderEntry(generic.FormView):
+    template_name = "inventory/order_entry.html"
+    form_class = NewOrderForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["ordered_by"] = self.request.user
+        return initial
+
+    def form_valid(self, form):
+        order = form.save(commit=False)
+        order.ordered = False
+        order.save()
+        return HttpResponseRedirect(reverse("inventory:order", args=(order.id,)))
 
 
 class ItemList(PaginatedFilterView):
