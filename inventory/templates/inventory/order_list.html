@@ -1,0 +1,29 @@
+{% extends "base_view.html" %}
+{% load widget_tweaks %}
+
+{% block title %} meliza-lab : orders {% endblock %}
+
+{% block content %}
+<h2>Orders</h2>
+
+<p><a href="{% url 'admin:inventory_order_add' %}">add new order</a></p>
+
+{% include "inventory/order_table.html" %}
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?{{ query.urlencode }}&amp;page={{ page_obj.previous_page_number }}">previous</a> |
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            | <a href="?{{ query.urlencode }}&amp;page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}
+

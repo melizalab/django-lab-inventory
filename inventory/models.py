@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
-from __future__ import unicode_literals
-
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.db import models
@@ -17,7 +15,7 @@ class Category(models.Model):
 
     class Meta:
         verbose_name_plural = "categories"
-        ordering = ['name']
+        ordering = ["name"]
 
 
 class Unit(models.Model):
@@ -28,15 +26,19 @@ class Unit(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
 
 class Manufacturer(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64)
     url = models.CharField(max_length=64, blank=True, null=True)
-    lookup_url = models.CharField(max_length=64, blank=True, null=True,
-                                  help_text="url pattern to look up part number")
+    lookup_url = models.CharField(
+        max_length=64,
+        blank=True,
+        null=True,
+        help_text="url pattern to look up part number",
+    )
     rep = models.CharField(max_length=128, blank=True, null=True)
     rep_phone = models.CharField(max_length=16, blank=True, null=True)
     rep_email = models.CharField(max_length=64, blank=True, null=True)
@@ -46,15 +48,19 @@ class Manufacturer(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
 
 class Vendor(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64)
     url = models.CharField(max_length=64, blank=True, null=True)
-    lookup_url = models.CharField(max_length=128, blank=True, null=True,
-                                  help_text="url pattern to look up catalog number")
+    lookup_url = models.CharField(
+        max_length=128,
+        blank=True,
+        null=True,
+        help_text="url pattern to look up catalog number",
+    )
     phone = models.CharField(max_length=16, blank=True, null=True)
     rep = models.CharField(max_length=45, blank=True, null=True)
     rep_phone = models.CharField(max_length=16, blank=True, null=True)
@@ -64,7 +70,7 @@ class Vendor(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
 
 class PTAO(models.Model):
@@ -83,7 +89,7 @@ class PTAO(models.Model):
         return "%s (%s)" % (self.code, self.description)
 
     class Meta:
-        ordering = ['code']
+        ordering = ["code"]
         verbose_name = "PTAO"
         verbose_name_plural = "PTAOs"
 
@@ -91,35 +97,44 @@ class PTAO(models.Model):
 class Item(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128)
-    chem_formula = models.CharField('Chemical formula', max_length=45,
-                                    blank=True, null=True)
+    chem_formula = models.CharField(
+        "Chemical formula", max_length=45, blank=True, null=True
+    )
 
     vendor = models.ForeignKey(Vendor, on_delete=models.PROTECT)
-    catalog = models.CharField('Catalog number', max_length=45,
-                               blank=True, null=True)
-    manufacturer = models.ForeignKey('Manufacturer', blank=True, null=True,
-                                     on_delete=models.SET_NULL,
-                                     help_text="leave blank if unknown or same as vendor")
-    manufacturer_number = models.CharField(max_length=45,
-                                           blank=True, null=True)
-    size = models.DecimalField('Size of unit',
-                               max_digits=10, decimal_places=2,
-                               blank=True, null=True)
+    catalog = models.CharField("Catalog number", max_length=45, blank=True, null=True)
+    manufacturer = models.ForeignKey(
+        "Manufacturer",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        help_text="leave blank if unknown or same as vendor",
+    )
+    manufacturer_number = models.CharField(max_length=45, blank=True, null=True)
+    size = models.DecimalField(
+        "Size of unit", max_digits=10, decimal_places=2, blank=True, null=True
+    )
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     date_added = models.DateField(auto_now_add=True)
-    parent_item = models.ForeignKey('self', blank=True, null=True,
-                                    on_delete=models.SET_NULL,
-                                    help_text="example: for printer cartriges, select printer")
+    parent_item = models.ForeignKey(
+        "self",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        help_text="example: for printer cartriges, select printer",
+    )
     comments = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
 
     def unit_size(self):
-        return "%s%s%s" % (self.size or "",
-                           "" if str(self.unit).startswith("/") else " ",
-                           self.unit)
+        return "%s%s%s" % (
+            self.size or "",
+            "" if str(self.unit).startswith("/") else " ",
+            self.unit,
+        )
 
     def total_price(self):
         return (self.cost or 0) * self.units_purchased
@@ -137,15 +152,14 @@ class Item(models.Model):
             return None
 
     def get_absolute_url(self):
-        return reverse("inventory:item", kwargs={'pk': self.pk})
-
+        return reverse("inventory:item", kwargs={"pk": self.pk})
 
 
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64)
     created = models.DateTimeField(auto_now_add=True)
-    items = models.ManyToManyField(Item, through='OrderItem')
+    items = models.ManyToManyField(Item, through="OrderItem")
     ptao = models.ForeignKey(PTAO, blank=True, null=True, on_delete=models.SET_NULL)
     ordered = models.BooleanField()
     order_date = models.DateField(default=datetime.date.today)
@@ -163,30 +177,40 @@ class Order(models.Model):
         return self.items.count
 
     def get_absolute_url(self):
-        return reverse("inventory:order", kwargs={'pk': self.pk})
+        return reverse("inventory:order", kwargs={"pk": self.pk})
 
     class Meta:
-        ordering = ['-order_date', 'name']
+        ordering = ["-created"]
 
 
 class OrderItem(models.Model):
     id = models.AutoField(primary_key=True)
-    item  = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
     units_purchased = models.IntegerField()
-    cost = models.DecimalField('Cost per unit', max_digits=10, decimal_places=2,
-                               blank=True, null=True)
+    cost = models.DecimalField(
+        "Cost per unit", max_digits=10, decimal_places=2, blank=True, null=True
+    )
 
     date_arrived = models.DateField(blank=True, null=True)
-    serial = models.CharField('Serial number', max_length=45,
-                              blank=True, null=True)
-    uva_equip = models.CharField('UVa equipment number', max_length=32,
-                                 blank=True, null=True)
-    location = models.CharField(max_length=45, blank=True, null=True,
-                                help_text="example: -80 freezer, refrigerator, Gilmer 283")
-    expiry_years = models.DecimalField('Warranty or Item expiration (y)', max_digits=4,
-                                       decimal_places=2, blank=True, null=True)
+    serial = models.CharField("Serial number", max_length=45, blank=True, null=True)
+    uva_equip = models.CharField(
+        "UVa equipment number", max_length=32, blank=True, null=True
+    )
+    location = models.CharField(
+        max_length=45,
+        blank=True,
+        null=True,
+        help_text="example: -80 freezer, refrigerator, Gilmer 283",
+    )
+    expiry_years = models.DecimalField(
+        "Warranty or Item expiration (y)",
+        max_digits=4,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
 
     reconciled = models.BooleanField()
 
