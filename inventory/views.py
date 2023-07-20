@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
-from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
-from django.views import generic
 import django_filters as filters
-from django_filters.views import FilterView
 from django.db.models import Q
+from django.shortcuts import render
+from django.views import generic
+from django_filters.views import FilterView
 
-from inventory.models import Order, Item, Account
+from inventory.models import Item, Order
 
 
 def index(request):
