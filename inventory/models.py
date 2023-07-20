@@ -73,7 +73,7 @@ class Vendor(models.Model):
         ordering = ["name"]
 
 
-class PTAO(models.Model):
+class Account(models.Model):
     id = models.AutoField(primary_key=True)
     code = models.CharField(max_length=64, unique=True)
     description = models.CharField(max_length=128)
@@ -90,8 +90,8 @@ class PTAO(models.Model):
 
     class Meta:
         ordering = ["code"]
-        verbose_name = "PTAO"
-        verbose_name_plural = "PTAOs"
+        verbose_name = "Account"
+        verbose_name_plural = "Accounts"
 
 
 class Item(models.Model):
@@ -160,7 +160,9 @@ class Order(models.Model):
     name = models.CharField(max_length=64)
     created = models.DateTimeField(auto_now_add=True)
     items = models.ManyToManyField(Item, through="OrderItem")
-    ptao = models.ForeignKey(PTAO, blank=True, null=True, on_delete=models.SET_NULL)
+    account = models.ForeignKey(
+        Account, blank=True, null=True, on_delete=models.SET_NULL
+    )
     ordered = models.BooleanField()
     order_date = models.DateField(default=datetime.date.today)
     ordered_by = models.ForeignKey(User, on_delete=models.PROTECT)

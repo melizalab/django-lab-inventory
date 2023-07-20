@@ -19,7 +19,7 @@ class OrderFilter(filters.FilterSet):
         field_name="ordered_by__username", lookup_expr="istartswith"
     )
     account = filters.CharFilter(
-        field_name="ptao__description", lookup_expr="icontains"
+        field_name="account__description", lookup_expr="icontains"
     )
 
     class Meta:

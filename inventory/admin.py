@@ -5,7 +5,7 @@ from inventory.models import (
     Unit,
     Manufacturer,
     Vendor,
-    PTAO,
+    Account,
     Order,
     OrderItem,
 )
@@ -57,10 +57,10 @@ class OrderAdmin(admin.ModelAdmin):
         "order_date",
         "ordered_by",
         "ordered",
-        "ptao",
+        "account",
     )
-    list_display = ("name", "item_count", "order_date", "ordered", "ptao")
-    list_filter = ("ordered", "ptao", "ordered_by")
+    list_display = ("name", "item_count", "order_date", "ordered", "account")
+    list_filter = ("ordered", "account", "ordered_by")
     search_fields = ("name",)
     inlines = (OrderItemInline,)
 
@@ -87,12 +87,12 @@ class OrderItemAdmin(admin.ModelAdmin):
 admin.site.register(OrderItem, OrderItemAdmin)
 
 
-class PTAOAdmin(admin.ModelAdmin):
+class AccountAdmin(admin.ModelAdmin):
     fields = ("code", "description", "expires")
     list_display = fields + ("active",)
 
 
-admin.site.register(PTAO, PTAOAdmin)
+admin.site.register(Account, AccountAdmin)
 
 for model in (Category, Unit, Manufacturer, Vendor):
     admin.site.register(model)
