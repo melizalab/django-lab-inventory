@@ -90,7 +90,7 @@ admin.site.register(OrderItem, OrderItemAdmin)
 
 class AccountAdmin(admin.ModelAdmin):
     fields = ("code", "description", "expires")
-    list_display = fields + ("active",)
+    list_display = fields
 
 
 admin.site.register(Account, AccountAdmin)

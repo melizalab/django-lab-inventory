@@ -80,12 +80,6 @@ class Account(models.Model):
     description = models.CharField(max_length=128)
     expires = models.DateField(blank=True, null=True)
 
-    def active(self):
-        if self.expires:
-            return datetime.date.today() < self.expires
-        else:
-            return True
-
     def __str__(self):
         return "%s (%s)" % (self.description, self.code)
 
