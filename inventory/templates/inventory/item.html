@@ -1,4 +1,5 @@
 {% extends "base_view.html" %}
+{% load widget_tweaks %}
 
 {% block title %} meliza-lab : item : {{ item.name }} {% endblock %}
 
@@ -73,9 +74,43 @@
   </tbody>
 </table>
 
+<p>To enter or updated information about an item after it has been received, click the <span class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></span> icon. To place a new order for the item, use the form below.</p>
+
+<hr/>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Order this item</h3>
+  </div>
+  <div class="panel-body">
+    <form action="{% url 'inventory:add_item_to_order' item.id %}" class="form-horizontal" method="post" role="form">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      {% for field in form %}
+      <div class="form-group {% if field.errors %}has-error{% endif %}">
+        <label for="{{field.auto_id}}" class="col-sm-2 control-label">{{ field.label }}</label>
+        <div class="col-sm-5">
+          {% render_field field class+="form-control" %}
+        </div>
+      </div>
+      {% endfor %}
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-default">Add item to order</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
 <hr>
 <a href="{% url 'inventory:items' %}">back to item list</a></br>
-<a href="{% url 'inventory:add_item_to_order' item.id %}">add this item to an order</a><br/>
 <a href="{% url 'admin:inventory_item_change' item.id %}">edit item (advanced users only)</a><br/>
 
 

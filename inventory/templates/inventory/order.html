@@ -27,6 +27,9 @@
     <th>Quantity</th>
     <th>Total Price</th>
     <th></th>
+    {% if not order.ordered %}
+    <th></th>
+    {% endif %}
   </thead>
   <tbody>
     {% for oit in orderitem_list %}
@@ -46,6 +49,10 @@
           <td>{{ oit.total_price }}</td>
           <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}"
                  class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></a></td>
+	  {% if not order.ordered %}
+          <td><a href="{% url 'admin:inventory_orderitem_delete' oit.id %}"
+                 class="glyphicon glyphicon-trash" alt="[delete]" aria-label="Delete"></a></td>
+	  {% endif %}
         </tr>
     {% endfor %}
   </tbody>
@@ -54,7 +61,7 @@
 
 <hr>
 
-To add items to this order, search the <a href="{% url 'inventory:items' %}">items list</a> or <a href="{% url 'inventory:new_item' %}">add a new item</a><br/>
+<p>To update information about an item after it has been received, click the <span class="glyphicon glyphicon-edit" alt="[edit]".  aria-label="Edit"></span> icon. {% if not order.ordered %} To add items to this order, search the <a href="{% url 'inventory:items' %}">items list</a> or <a href="{% url 'inventory:new_item' %}">add a new item</a>. To remove an item from the order, click the <span class="glyphicon glyphicon-trash" alt="[delete]" aria-label="Delete"></span> icon. {% endif %} </p>
 <a href="{% url 'inventory:orders' %}">back to order list</a><br/>
 <a href="{% url 'admin:inventory_order_change' order.id %}">edit order (advanced users only)</a><br/>
 

@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
+from django.shortcuts import get_object_or_404, redirect
 import django_filters as filters
 from django.db.models import Q
 from django.shortcuts import render
 from django.views import generic
 from django_filters.views import FilterView
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
 from inventory.models import Item, Order
-from inventory.forms import NewOrderForm, NewItemForm
+from inventory.forms import NewOrderForm, NewItemForm, NewOrderItemForm
 
 
 def index(request):
@@ -117,7 +116,7 @@ class OrderEntry(generic.FormView):
         order = form.save(commit=False)
         order.ordered = False
         order.save()
-        return HttpResponseRedirect(reverse("inventory:order", args=(order.id,)))
+        return redirect("inventory:order", pk=order.id)
 
 
 class ItemList(PaginatedFilterView):
@@ -127,12 +126,13 @@ class ItemList(PaginatedFilterView):
     context_object_name = "item_list"
 
 
-class ItemView(generic.DetailView):
+class ItemView(generic.DetailView, generic.FormView):
     model = Item
     template_name = "inventory/item.html"
+    form_class = NewOrderItemForm
 
     def get_context_data(self, **kwargs):
-        context = super(ItemView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["lineitems"] = context["item"].orderitem_set.order_by(
             "order__order_date"
         )
@@ -145,7 +145,18 @@ class ItemEntry(generic.FormView):
 
     def form_valid(self, form):
         item = form.save()
-        order = form.cleaned_data["order"]
-        if order is not None:
-            print("TODO: redirect to form for associating items with orders")
-        return HttpResponseRedirect(reverse("inventory:item", args=(item.id,)))
+        return redirect("inventory:item", pk=item.id)
+
+
+class OrderItemEntry(generic.FormView):
+    """Order an item (associate it with an order)"""
+
+    template_name = "inventory/orderitem_entry.html"
+    form_class = NewOrderItemForm
+
+    def form_valid(self, form):
+        item_id = self.kwargs["pk"]
+        form.instance.item = get_object_or_404(Item, pk=item_id)
+        form.instance.reconciled = False
+        oitem = form.save()
+        return redirect("inventory:order", pk=oitem.order.id)

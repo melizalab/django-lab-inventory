@@ -11,4 +11,9 @@ urlpatterns = [
     re_path(r"^items/$", views.ItemList.as_view(), name="items"),
     re_path(r"^items/new/$", views.ItemEntry.as_view(), name="new_item"),
     re_path(r"^items/(?P<pk>\d+)/$", views.ItemView.as_view(), name="item"),
+    re_path(
+        r"^items/(?P<pk>\d+)/order/$",
+        views.OrderItemEntry.as_view(),
+        name="add_item_to_order",
+    ),
 ]

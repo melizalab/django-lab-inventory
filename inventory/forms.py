@@ -3,7 +3,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from inventory.models import Account, Order, Vendor, Item
+from inventory.models import Account, Order, Vendor, Item, OrderItem
 
 
 class NewOrderForm(forms.ModelForm):
@@ -24,11 +24,6 @@ class NewItemForm(forms.ModelForm):
     manufacturer_number = forms.CharField(
         label="Manufacturer part number", required=False
     )
-    order = forms.ModelChoiceField(
-        queryset=Order.objects.filter(ordered=False),
-        required=False,
-        label="Add this item to an in-progress order",
-    )
 
     class Meta:
         model = Item
@@ -44,3 +39,17 @@ class NewItemForm(forms.ModelForm):
             "parent_item",
             "comments",
         ]
+
+
+class NewOrderItemForm(forms.ModelForm):
+    order = forms.ModelChoiceField(
+        queryset=Order.objects.filter(ordered=False),
+        required=False,
+        label="Choose an in-progress order",
+    )
+    units_purchased = forms.IntegerField(label="Number of units to order")
+    cost = forms.DecimalField(label="Current price per unit")
+
+    class Meta:
+        model = OrderItem
+        fields = ["order", "units_purchased", "cost"]
