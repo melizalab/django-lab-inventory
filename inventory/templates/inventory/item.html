@@ -50,7 +50,7 @@
     <th>Price</th>
     <th>Quantity</th>
     <th>Total Price</th>
-    <th>Arrival Date</th>
+    <th>Received</th>
     <th>Location</th>
     <th>Serial</th>
     <th>Equipment #</th>
@@ -63,10 +63,10 @@
       <td>{{ oit.cost }}</td>
       <td>{{ oit.units_purchased }}</td>
       <td>{{ oit.total_price }}</td>
-      <td>{{ oit.date_arrived }}</td>
-      <td>{{ oit.location }}</td>
-      <td>{{ oit.serial }}</td>
-      <td>{{ oit.uva_equip }}</td>
+      <td>{{ oit.date_arrived|default:"no" }}</td>
+      <td>{{ oit.location|default:"" }}</td>
+      <td>{{ oit.serial|default:"" }}</td>
+      <td>{{ oit.uva_equip|default:"" }}</td>
       <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}"
              class="glyphicon glyphicon-edit" alt="[edit]" aria-label="[Edit]"></a></td>
     </tr>
@@ -74,7 +74,7 @@
   </tbody>
 </table>
 
-<p>To enter or updated information about an item after it has been received, click the <span class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></span> icon. To place a new order for the item, use the form below.</p>
+<p>To enter or update information about an item after it has been received, click the <span class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></span> icon. To place a new order for the item, use the form below.</p>
 
 <hr/>
 

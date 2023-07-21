@@ -12,7 +12,7 @@
   <dt>created on</dt><dd>{{ order.order_date }}</dd>
   <dt>created by<dt><dd>{{ order.ordered_by.username}}</dd>
   <dt>account</dt><dd>{{ order.account }}</dd>
-  <dt>ordered</dt><dd>{{ order.ordered }}</dd>
+  <dt>status</dt><dd>{{ order.ordered|yesno:"ordered,in progress" }}</dd>
 </dl>
 
 <h3>items</h3>
@@ -26,6 +26,9 @@
     <th>Price</th>
     <th>Quantity</th>
     <th>Total Price</th>
+    {% if order.ordered %}
+    <th>Received</th>
+    {% endif %}
     <th></th>
     {% if not order.ordered %}
     <th></th>
@@ -47,6 +50,9 @@
           <td>{{ oit.cost }}</td>
           <td>{{ oit.units_purchased }}</td>
           <td>{{ oit.total_price }}</td>
+	  {% if order.ordered %}
+	  <td>{{ oit.date_arrived|default:"no" }}</td>
+	  {% endif %}
           <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}"
                  class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></a></td>
 	  {% if not order.ordered %}
