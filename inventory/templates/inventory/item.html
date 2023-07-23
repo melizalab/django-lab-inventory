@@ -23,19 +23,19 @@
   <dt>manufacturer</dt>
   <dd>
     {% if item.manufacturer.url %}<a href="{{ item.manufacturer.url }}">{{ item.manufacturer }}</a>
-    {% else %}{{ item.manufacturer }}{% endif %}
+    {% else %}{{ item.manufacturer|default:"" }}{% endif %}
   </dd>
   <dt>part number</dt>
   <dd>
     {% if item.mfg_url %}<a href="{{ item.mfg_url }}">{{ item.manufacturer_number }}</a>
-    {% else %}{{ item.manufacturer_number }}{% endif %}
+    {% else %}{{ item.manufacturer_number|default:"" }}{% endif %}
   </dd>
   <dt>unit size</dt><dd>{{ item.unit_size }}</dd>
 </dl>
 
 <dl class="dl-horizontal">
   <dt>category</dt><dd>{{ item.category }}</dd>
-  <dt>part of</dt><dd>{{ item.parent_item }}</dd>
+  <dt>part of</dt><dd>{{ item.parent_item|default:"" }}</dd>
 </dl>
 
 <dl class="dl-horizontal">

@@ -125,6 +125,8 @@ class Item(models.Model):
         return self.name
 
     def unit_size(self):
+        if self.unit.name == "each":
+            return self.unit.name
         return "%s%s%s" % (
             self.size or "",
             "" if str(self.unit).startswith("/") else " ",

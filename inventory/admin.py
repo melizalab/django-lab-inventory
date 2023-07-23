@@ -41,6 +41,8 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "category",
+        "vendor",
+        "catalog",
         "date_added",
     )
     list_filter = ("category", "vendor", "manufacturer", "date_added")

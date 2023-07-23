@@ -44,11 +44,11 @@
           </td>
           <td>
             {% if item.manufacturer.url %}<a href="{{ item.manufacturer.url }}">{{ item.manufacturer }}</a>
-            {% else %}{{ item.manufacturer }}{% endif %}
+            {% else %}{{ item.manufacturer|default:"" }}{% endif %}
           </td>
           <td>
             {% if item.manufacturer_url %}<a href="{{ item.manufacturer_url }}">{{ item.catalog }}</a>
-            {% else %}{{ item.manufacturer_number }}{% endif %}
+            {% else %}{{ item.manufacturer_number|default:"" }}{% endif %}
           </td>
           <td>{{ item.category }}</td>
         </tr>

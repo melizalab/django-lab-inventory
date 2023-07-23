@@ -125,6 +125,10 @@ class ItemList(PaginatedFilterView):
     template_name = "inventory/item_list.html"
     context_object_name = "item_list"
 
+    def get_queryset(self):
+        qs = Item.objects.filter(**self.kwargs)
+        return qs.order_by("-date_added")
+
 
 class ItemView(generic.DetailView, generic.FormView):
     model = Item
@@ -134,7 +138,7 @@ class ItemView(generic.DetailView, generic.FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["lineitems"] = context["item"].orderitem_set.order_by(
-            "order__order_date"
+            "-order__order_date"
         )
         return context
 
