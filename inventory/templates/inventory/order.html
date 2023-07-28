@@ -56,7 +56,7 @@
           <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}"
                  class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></a></td>
 	  {% if not order.ordered %}
-          <td><a href="{% url 'admin:inventory_orderitem_delete' oit.id %}"
+          <td><a href="{% url 'inventory:remove_item_from_order' oit.id %}"
                  class="glyphicon glyphicon-trash" alt="[delete]" aria-label="Delete"></a></td>
 	  {% endif %}
         </tr>

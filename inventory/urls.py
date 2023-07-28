@@ -16,4 +16,9 @@ urlpatterns = [
         views.OrderItemEntry.as_view(),
         name="add_item_to_order",
     ),
+    re_path(
+        r"^orderitems/(?P<pk>\d+)/delete/$",
+        views.OrderItemDelete.as_view(),
+        name="remove_item_from_order",
+    ),
 ]

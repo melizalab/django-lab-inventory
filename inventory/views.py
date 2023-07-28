@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.views import generic
 from django_filters.views import FilterView
 
-from inventory.models import Item, Order
+from inventory.models import Item, Order, OrderItem
 from inventory.forms import NewOrderForm, NewItemForm, NewOrderItemForm
 
 
@@ -155,7 +155,6 @@ class ItemEntry(generic.FormView):
 class OrderItemEntry(generic.FormView):
     """Order an item (associate it with an order)"""
 
-    template_name = "inventory/orderitem_entry.html"
     form_class = NewOrderItemForm
 
     def form_valid(self, form):
@@ -164,3 +163,9 @@ class OrderItemEntry(generic.FormView):
         form.instance.reconciled = False
         oitem = form.save()
         return redirect("inventory:order", pk=oitem.order.id)
+
+
+class OrderItemDelete(generic.DeleteView):
+    model = OrderItem
+    template_name = "inventory/orderitem_confirm_delete.html"
+    success_url = "/inventory/orders/{order_id}/"
