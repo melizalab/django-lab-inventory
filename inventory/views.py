@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
+import datetime
+
 from django.shortcuts import get_object_or_404, redirect
 import django_filters as filters
 from django.db.models import Q
@@ -117,6 +119,20 @@ class OrderEntry(generic.FormView):
         order.ordered = False
         order.save()
         return redirect("inventory:order", pk=order.id)
+
+
+class OrderMarkPlaced(generic.UpdateView):
+    model = Order
+    fields = ["ordered"]
+    template_name = "inventory/order_mark_placed.html"
+
+    def post(self, request, *args, **kwargs):
+        order_id = kwargs["pk"]
+        order = get_object_or_404(Order, id=order_id)
+        order.order_date = datetime.date.today()
+        order.ordered = True
+        order.save()
+        return redirect("inventory:order", pk=order_id)
 
 
 class ItemList(PaginatedFilterView):

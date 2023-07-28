@@ -13,6 +13,11 @@ urlpatterns = [
         r"^orders/new/$", login_required(views.OrderEntry.as_view()), name="new_order"
     ),
     re_path(r"^orders/(?P<pk>\d+)/$", views.OrderView.as_view(), name="order"),
+    re_path(
+        r"^orders/(?P<pk>\d+)/place/$",
+        login_required(views.OrderMarkPlaced.as_view()),
+        name="mark_order_placed",
+    ),
     re_path(r"^items/$", views.ItemList.as_view(), name="items"),
     re_path(
         r"^items/new/$", login_required(views.ItemEntry.as_view()), name="new_item"
