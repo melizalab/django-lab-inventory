@@ -139,13 +139,13 @@ class Item(models.Model):
     def vendor_url(self):
         try:
             return self.vendor.lookup_url % self.catalog
-        except (AttributeError, TypeError):
+        except (ValueError, AttributeError, TypeError):
             return None
 
     def mfg_url(self):
         try:
             return self.manufacturer.lookup_url % self.manufacturer_number
-        except (AttributeError, TypeError):
+        except (ValueError, AttributeError, TypeError):
             return None
 
     def get_absolute_url(self):
