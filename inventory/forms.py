@@ -23,7 +23,7 @@ class NewOrderForm(forms.ModelForm):
 class ConfirmOrderForm(forms.ModelForm):
     account = forms.ModelChoiceField(
         queryset=Account.objects.exclude(expires__lt=datetime.date.today()),
-        required=False,
+        required=True,
     )
 
     class Meta:

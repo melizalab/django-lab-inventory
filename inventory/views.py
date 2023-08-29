@@ -96,7 +96,8 @@ class OrderList(PaginatedFilterView):
     context_object_name = "order_list"
 
     def get_queryset(self):
-        return Order.objects.with_counts().filter(**self.kwargs)
+        qs = Order.objects.with_counts().filter(**self.kwargs)
+        return qs.order_by("-created")
 
 
 class OrderView(generic.DetailView):
