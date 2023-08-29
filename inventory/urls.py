@@ -17,7 +17,7 @@ urlpatterns = [
         name="mark_order_placed",
     ),
     path("items/", views.ItemList.as_view(), name="items"),
-    path("items/new/", login_required(views.ItemEntry.as_view()), name="new_item"),
+    path("items/new/", login_required(views.item_entry), name="new_item"),
     path("items/<int:pk>/", views.ItemView.as_view(), name="item"),
     path(
         "items/<int:item_id>/order/",

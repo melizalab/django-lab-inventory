@@ -161,13 +161,15 @@ class ItemView(generic.DetailView, generic.FormView):
         return context
 
 
-class ItemEntry(generic.FormView):
-    template_name = "inventory/item_entry.html"
-    form_class = NewItemForm
-
-    def form_valid(self, form):
-        item = form.save()
-        return redirect("inventory:item", pk=item.id)
+def item_entry(request):
+    if request.method == "POST":
+        form = NewItemForm(request.POST)
+        if form.is_valid():
+            item = form.save()
+            return redirect("inventory:item", pk=item.id)
+    else:
+        form = NewItemForm()
+    return TemplateResponse(request, "inventory/item_entry.html", {"form": form})
 
 
 def order_item_entry(request, item_id):

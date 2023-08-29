@@ -14,7 +14,7 @@
     <form action="{% url 'inventory:new_item' %}" class="form-horizontal" method="post" role="form">
       {% csrf_token %}
       <p><strong>Instructions</strong>: This form is used to create a new item. Items are specific things or services sold by vendors. 
-      After the item is created, you can add it to an order.</p>
+	After the item is created, you can add it to an order. Before creating the item, you may need to <a href="{% url 'admin:inventory_vendor_add' %}">add a vendor</a> or <a href="{% url 'admin:inventory_manufacturer_add' %}">add a manufacturer</a>.</p>
 
       {% if form.non_field_errors %}
       <div class="alert alert-danger">{{ form.non_field_errors }}</div>
