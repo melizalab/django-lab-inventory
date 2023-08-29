@@ -58,7 +58,7 @@ class NewItemForm(forms.ModelForm):
 class NewOrderItemForm(forms.ModelForm):
     order = forms.ModelChoiceField(
         queryset=Order.objects.filter(ordered=False),
-        required=False,
+        required=True,
         label="Choose an in-progress order",
     )
     units_purchased = forms.IntegerField(label="Number of units to order")

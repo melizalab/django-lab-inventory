@@ -122,14 +122,14 @@ def order_entry(request):
     return TemplateResponse(request, "inventory/order_entry.html", {"form": form})
 
 
-def mark_order_placed(request, pk):
-    order = get_object_or_404(Order, id=pk)
+def mark_order_placed(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
     if request.method == "POST":
         form = ConfirmOrderForm(request.POST, instance=order)
         if form.is_valid():
             order = form.save(commit=False)
             order.mark_placed()
-            return redirect("inventory:order", pk=pk)
+            return redirect("inventory:order", pk=order_id)
     else:
         form = ConfirmOrderForm(instance=order)
     return TemplateResponse(
@@ -168,6 +168,20 @@ class ItemEntry(generic.FormView):
     def form_valid(self, form):
         item = form.save()
         return redirect("inventory:item", pk=item.id)
+
+
+def order_item_entry(request, item_id):
+    if request.method == "POST":
+        item = get_object_or_404(Item, id=item_id)
+        form = NewOrderItemForm(request.POST)
+        if form.is_valid():
+            oitem = form.save(commit=False)
+            oitem.item = item
+            oitem.save()
+            return redirect("inventory:order", pk=oitem.order.id)
+        return TemplateResponse(
+            request, "inventory/item.html", {"item": item, "form": form}
+        )
 
 
 class OrderItemEntry(generic.FormView):

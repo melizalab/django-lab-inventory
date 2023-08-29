@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<p>This web application allows you to interact with the inventory database. The database contains records of <a href="">items</a>, which are specific things or services sold by <a href="">vendors</a>. Items are associated with <a href="{% url 'inventory:orders' %}">orders</a></li>, which are requests by an individual to make a purchase using funds from an <a href="">account</a>.
+<p>This web application allows you to interact with the inventory database. The database contains records of <a href="{% url 'inventory:items' %}">items</a>, which are specific things or services sold by <a href="">vendors</a>. Items are associated with <a href="{% url 'inventory:orders' %}">orders</a></li>, which are requests by an individual to make a purchase using funds from an <a href="">account</a>.
 
 <ul>
   <li><a href="{% url 'inventory:orders' %}">list and search orders</a></li>
