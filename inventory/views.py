@@ -186,19 +186,6 @@ def order_item_entry(request, item_id):
         )
 
 
-class OrderItemEntry(generic.FormView):
-    """Order an item (associate it with an order)"""
-
-    form_class = NewOrderItemForm
-
-    def form_valid(self, form):
-        item_id = self.kwargs["pk"]
-        form.instance.item = get_object_or_404(Item, pk=item_id)
-        form.instance.reconciled = False
-        oitem = form.save()
-        return redirect("inventory:order", pk=oitem.order.id)
-
-
 class OrderItemDelete(generic.DeleteView):
     model = OrderItem
     template_name = "inventory/orderitem_confirm_delete.html"
