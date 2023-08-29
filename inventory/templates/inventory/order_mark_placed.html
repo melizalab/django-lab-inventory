@@ -7,13 +7,22 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Remove item from order</h3>
+    <h3 class="panel-title">Mark order as placed</h3>
   </div>
   <div class="panel-body">
-    <form action="{% url 'inventory:mark_order_placed' object.id %}" class="form-horizontal" method="post" role="form">
+    <form action="{% url 'inventory:mark_order_placed' order.id %}" class="form-horizontal" method="post" role="form">
       {% csrf_token %}
-      <p>Are you sure you want to mark the in-progress order <strong>{{object.order.name}}</strong> as placed?</p>
+      <p>Do you want to mark the in-progress order <strong>{{order.name}}</strong> as placed?</p>
 
+      {% for field in form %}
+      <div class="form-group {% if field.errors %}has-error{% endif %}">
+        <label for="{{field.auto_id}}" class="col-sm-2 control-label">{{ field.label }}</label>
+        <div class="col-sm-5">
+          {% render_field field class+="form-control" %}
+        </div>
+      </div>
+      {% endfor %}
+      
       <div class="form-group">
         <div class="col-sm-10">
           <button type="submit" name="confirm" class="btn btn-default">Confirm</button>

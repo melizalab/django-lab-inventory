@@ -20,6 +20,17 @@ class NewOrderForm(forms.ModelForm):
         fields = ["name", "ordered_by", "account"]
 
 
+class ConfirmOrderForm(forms.ModelForm):
+    account = forms.ModelChoiceField(
+        queryset=Account.objects.exclude(expires__lt=datetime.date.today()),
+        required=False,
+    )
+
+    class Meta:
+        model = Order
+        fields = ["account"]
+
+
 class NewItemForm(forms.ModelForm):
     name = forms.CharField(label="Item Name")
     vendor = forms.ModelChoiceField(queryset=Vendor.objects.all(), required=True)

@@ -5,16 +5,21 @@ import datetime
 from django.shortcuts import get_object_or_404, redirect
 import django_filters as filters
 from django.db.models import Q
-from django.shortcuts import render
+from django.template.response import TemplateResponse
 from django.views import generic
 from django_filters.views import FilterView
 
 from inventory.models import Item, Order, OrderItem
-from inventory.forms import NewOrderForm, NewItemForm, NewOrderItemForm
+from inventory.forms import (
+    NewOrderForm,
+    NewItemForm,
+    NewOrderItemForm,
+    ConfirmOrderForm,
+)
 
 
 def index(request):
-    return render(request, "inventory/index.html")
+    return TemplateResponse(request, "inventory/index.html")
 
 
 class PaginatedFilterView(FilterView):
@@ -105,34 +110,34 @@ class OrderView(generic.DetailView):
         return context
 
 
-class OrderEntry(generic.FormView):
-    template_name = "inventory/order_entry.html"
-    form_class = NewOrderForm
-
-    def get_initial(self):
-        initial = super().get_initial()
-        initial["ordered_by"] = self.request.user
-        return initial
-
-    def form_valid(self, form):
-        order = form.save(commit=False)
-        order.ordered = False
-        order.save()
-        return redirect("inventory:order", pk=order.id)
+def order_entry(request):
+    if request.method == "POST":
+        form = NewOrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.ordered = False
+            order.save()
+            return redirect("inventory:order", pk=order.id)
+    else:
+        form = NewOrderForm(initial={"ordered_by": request.user})
+    return TemplateResponse(request, "inventory/order_entry.html", {"form": form})
 
 
-class OrderMarkPlaced(generic.UpdateView):
-    model = Order
-    fields = ["ordered"]
-    template_name = "inventory/order_mark_placed.html"
-
-    def post(self, request, *args, **kwargs):
-        order_id = kwargs["pk"]
-        order = get_object_or_404(Order, id=order_id)
-        order.order_date = datetime.date.today()
-        order.ordered = True
-        order.save()
-        return redirect("inventory:order", pk=order_id)
+def mark_order_placed(request, pk):
+    order = get_object_or_404(Order, id=pk)
+    if request.method == "POST":
+        form = ConfirmOrderForm(request.POST, instance=order)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.order_date = datetime.date.today()
+            order.ordered = True
+            order.save()
+            return redirect("inventory:order", pk=pk)
+    else:
+        form = ConfirmOrderForm(instance=order)
+    return TemplateResponse(
+        request, "inventory/order_mark_placed.html", {"order": order, "form": form}
+    )
 
 
 class ItemList(PaginatedFilterView):

@@ -9,13 +9,11 @@ app_name = "inventory"
 urlpatterns = [
     re_path(r"^$", views.index, name="index"),
     re_path(r"^orders/$", views.OrderList.as_view(), name="orders"),
-    re_path(
-        r"^orders/new/$", login_required(views.OrderEntry.as_view()), name="new_order"
-    ),
+    re_path(r"^orders/new/$", login_required(views.order_entry), name="new_order"),
     re_path(r"^orders/(?P<pk>\d+)/$", views.OrderView.as_view(), name="order"),
     re_path(
         r"^orders/(?P<pk>\d+)/place/$",
-        login_required(views.OrderMarkPlaced.as_view()),
+        login_required(views.mark_order_placed),
         name="mark_order_placed",
     ),
     re_path(r"^items/$", views.ItemList.as_view(), name="items"),
