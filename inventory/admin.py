@@ -62,7 +62,7 @@ class OrderAdmin(admin.ModelAdmin):
         "ordered",
         "account",
     )
-    list_display = ("name", "item_count", "order_date", "ordered", "account")
+    list_display = ("name", "order_date", "ordered", "account")
     list_filter = ("ordered", "account", "ordered_by")
     search_fields = ("name",)
     inlines = (OrderItemInline,)

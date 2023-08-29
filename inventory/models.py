@@ -4,6 +4,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Count, Q
 from django.urls import reverse
 
 
@@ -159,6 +160,17 @@ class Item(models.Model):
         ]
 
 
+class OrderManager(models.Manager):
+    def with_counts(self):
+        today = datetime.date.today()
+        return self.annotate(
+            item_count=Count("orderitem"),
+            item_received_count=Count(
+                "orderitem", filter=Q(orderitem__date_arrived__lte=today)
+            ),
+        )
+
+
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64)
@@ -170,6 +182,7 @@ class Order(models.Model):
     ordered = models.BooleanField(default=False)
     order_date = models.DateField(default=datetime.date.today)
     ordered_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    objects = OrderManager()
 
     def __str__(self):
         if self.ordered:
@@ -178,12 +191,13 @@ class Order(models.Model):
             status = "in progress"
         return "%s (%s)" % (self.name, status)
 
-    @property
-    def item_count(self):
-        return self.items.count
-
     def get_absolute_url(self):
         return reverse("inventory:order", kwargs={"pk": self.pk})
+
+    def mark_placed(self):
+        self.order_date = datetime.date.today()
+        self.ordered = True
+        self.save()
 
     class Meta:
         ordering = ["-created"]

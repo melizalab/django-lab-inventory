@@ -23,20 +23,22 @@
   <thead>
     <th>Name</th>
     <th>Date</th>
+    <th>Status</th>
     <th>Items</th>
+    <th>Items Received</th>    
     <th>Ordered by</ht>
     <th>Account</th>
-    <th>Status</th>
   </thead>
   <tbody>
     {% for order in order_list %}
         <tr>
           <td><a href="{{ order.get_absolute_url }}">{{ order.name }}</a></td>
-          <td>{{ order.order_date }}</td>
+	  <td>{{ order.order_date }}</td>
+          <td>{{ order.ordered|yesno:"ordered,in progress" }}</td>
           <td>{{ order.item_count }}</td>
+          <td>{{ order.item_received_count }}</td>
 	  <td>{{ order.ordered_by }}</td>
           <td>{{ order.account.description }}</td>
-          <td>{{ order.ordered|yesno:"ordered,in progress" }}</td>
         </tr>
     {% endfor %}
   </tbody>

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
-import datetime
-
 from django.shortcuts import get_object_or_404, redirect
 import django_filters as filters
 from django.db.models import Q
@@ -97,6 +95,9 @@ class OrderList(PaginatedFilterView):
     template_name = "inventory/order_list.html"
     context_object_name = "order_list"
 
+    def get_queryset(self):
+        return Order.objects.with_counts().filter(**self.kwargs)
+
 
 class OrderView(generic.DetailView):
     model = Order
@@ -114,9 +115,7 @@ def order_entry(request):
     if request.method == "POST":
         form = NewOrderForm(request.POST)
         if form.is_valid():
-            order = form.save(commit=False)
-            order.ordered = False
-            order.save()
+            order = form.save()
             return redirect("inventory:order", pk=order.id)
     else:
         form = NewOrderForm(initial={"ordered_by": request.user})
@@ -129,9 +128,7 @@ def mark_order_placed(request, pk):
         form = ConfirmOrderForm(request.POST, instance=order)
         if form.is_valid():
             order = form.save(commit=False)
-            order.order_date = datetime.date.today()
-            order.ordered = True
-            order.save()
+            order.mark_placed()
             return redirect("inventory:order", pk=pk)
     else:
         form = ConfirmOrderForm(instance=order)
