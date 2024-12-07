@@ -35,3 +35,8 @@ re_path(r'^inventory/', include('inventory.urls')),
 
 5. Visit http://127.0.0.1:8000/inventory/ to use views.
 
+### Development
+
+Recommend using [uv](https://docs.astral.sh/uv/) for development.
+
+Testing: `uv run pytest`
