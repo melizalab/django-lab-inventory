@@ -156,20 +156,13 @@ dependencies = [
     { name = "django-widget-tweaks" },
 ]
 
-[package.optional-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "pytest-django" },
-    { name = "ruff" },
-]
-
 [package.dev-dependencies]
 dev = [
     { name = "psycopg2-binary" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-django" },
+    { name = "ruff" },
 ]
 
 [package.metadata]
@@ -177,18 +170,15 @@ requires-dist = [
     { name = "django", specifier = ">=4.2.16" },
     { name = "django-filter", specifier = ">=22.1" },
     { name = "django-widget-tweaks", specifier = ">=1.4.12" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.0" },
-    { name = "pytest-django", marker = "extra == 'dev'", specifier = ">=4.5" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.1.0" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "psycopg2-binary", specifier = ">=2.9.10" },
-    { name = "pytest", specifier = ">=8.3.3" },
+    { name = "psycopg2-binary", specifier = ">=2.9.10,<3" },
+    { name = "pytest", specifier = ">=8.3.3,<9" },
     { name = "pytest-cov", specifier = ">=5.0.0" },
     { name = "pytest-django", specifier = ">=4.9.0" },
+    { name = "ruff", specifier = ">=0.7.0" },
 ]
 
 [[package]]

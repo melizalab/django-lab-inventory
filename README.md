@@ -39,4 +39,6 @@ re_path(r'^inventory/', include('inventory.urls')),
 
 Recommend using [uv](https://docs.astral.sh/uv/) for development.
 
-Testing: `uv run pytest`
+Run `uv sync` to create a virtual environment and install dependencies. `uv sync --no-dev --locked` for deployment.
+
+Testing: `uv run pytest`. This uses settings from `test/settings.py`
