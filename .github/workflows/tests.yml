@@ -31,6 +31,44 @@ jobs:
         version: "latest"
     - name: Install dependencies
       run: uv sync --locked
+
+    - name: Check Django Configuration
+      env:
+        DJANGO_SETTINGS_MODULE: inventory.tests.settings
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+      run: |
+        uv run python -c "
+import os
+import django
+import sys
+
+print('Python executable:', sys.executable)
+print('Python version:', sys.version)
+print('Current directory:', os.getcwd())
+print('DJANGO_SETTINGS_MODULE:', os.environ.get('DJANGO_SETTINGS_MODULE'))
+print('Sys path:')
+for p in sys.path:
+    print(f'  {p}')
+
+try:
+    import inventory
+    print('Inventory package location:', inventory.__file__)
+except ImportError as e:
+    print('Failed to import inventory:', e)
+
+try:
+    import inventory.tests
+    print('Inventory tests location:', inventory.tests.__file__)
+except ImportError as e:
+    print('Failed to import inventory.tests:', e)
+
+try:
+    django.setup()
+    print('Django setup successful')
+except Exception as e:
+    print('Django setup failed:', e)
+"
+      
     - name: Apply migrations
       env:
         # Database settings
@@ -38,11 +76,6 @@ jobs:
         # Django settings
         DJANGO_SETTINGS_MODULE: inventory.tests.settings
       run: |
-        python -c "import sys; print('\n'.join(sys.path))"
-        python -c "import inventory; print(inventory.__file__)"
-        python -c "import inventory.tests; print(inventory.tests.__file__)"
-        python -c "import inventory.tests.urls; print(inventory.tests.urls.__file__)"
-        python -c "import django; print(django.__file__)"
         uv run -m django migrate
     - name: Run Tests
       run: uv run pytest        
