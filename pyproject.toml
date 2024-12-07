@@ -7,7 +7,7 @@ name = "django-lab-inventory"
 dynamic = ["version"]
 description = "A simple Django app for managing lab inventory"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = {text = "BSD 3-Clause License"}
 authors = [
     {name = "C Daniel Meliza", email = "dan@meliza.org"},
