@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
-from django.shortcuts import get_object_or_404, redirect
 import django_filters as filters
 from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views import generic
 from django_filters.views import FilterView
 
-from inventory.models import Item, Order, OrderItem
 from inventory.forms import (
-    NewOrderForm,
-    NewItemForm,
-    NewOrderItemForm,
     ConfirmOrderForm,
+    NewItemForm,
+    NewOrderForm,
+    NewOrderItemForm,
 )
+from inventory.models import Item, Order, OrderItem
 
 
 def index(request):

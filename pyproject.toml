@@ -52,16 +52,16 @@ include = '\.pyi?$'
 [tool.ruff]
 line-length = 88
 target-version = "py38"
-select = [
+lint.select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
     "F",  # pyflakes
     "I",  # isort
     "B",  # flake8-bugbear
 ]
-ignore = ["E221", "E501", "E701"]  # Matching your pep8 ignores
+lint.ignore = ["E221", "E501", "E701"]  # Matching your pep8 ignores
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 
 [tool.mypy]

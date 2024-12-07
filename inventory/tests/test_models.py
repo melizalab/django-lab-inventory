@@ -1,9 +1,10 @@
 # -*- mode: python -*-
 
 import pytest
-
 from django.contrib.auth import get_user_model
-from inventory.models import Item, Order, OrderItem, Vendor, Unit, Category, Account
+
+from inventory.models import Account, Category, Item, Order, OrderItem, Unit, Vendor
+
 
 def get_sentinel_user():
     return get_user_model().objects.get_or_create(username="deleted")[0]

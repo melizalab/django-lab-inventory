@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
 import datetime
+
 from django import forms
 from django.contrib.auth.models import User
 
-from inventory.models import Account, Order, Vendor, Item, OrderItem
+from inventory.models import Account, Item, Order, OrderItem, Vendor
 
 
 class NewOrderForm(forms.ModelForm):

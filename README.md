@@ -9,7 +9,7 @@ lab-inventory is licensed for you to use under the BSD 3-Clause License. See COP
 
 ### Quick start
 
-1. Requires Python 3.10+ and Django 4.2+
+1. Requires Python 3.10+. Runs on Django 4.2 LTS and 5.1.
 
 1. Install the package from pypi: `pip install django-lab-inventory`. Worth putting in a virtualenv.
 
@@ -41,4 +41,4 @@ Recommend using [uv](https://docs.astral.sh/uv/) for development.
 
 Run `uv sync` to create a virtual environment and install dependencies. `uv sync --no-dev --frozen` for deployment.
 
-Testing: `uv run pytest`. This uses settings from `test/settings.py`
+Testing: `uv run pytest`. Requires a test database, will use settings from `inventory/test/settings.py`.
