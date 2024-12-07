@@ -37,6 +37,12 @@ jobs:
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
         # Django settings
         DJANGO_SETTINGS_MODULE: inventory.tests.settings
-      run: uv run -m django migrate
+      run: |
+        python -c "import sys; print('\n'.join(sys.path))"
+        python -c "import inventory; print(inventory.__file__)"
+        python -c "import inventory.tests; print(inventory.tests.__file__)"
+        python -c "import inventory.tests.urls; print(inventory.tests.urls.__file__)"
+        python -c "import django; print(django.__file__)"
+        uv run -m django migrate
     - name: Run Tests
       run: uv run pytest        
