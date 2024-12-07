@@ -134,9 +134,6 @@ class Item(models.Model):
             self.unit,
         )
 
-    def total_price(self):
-        return (self.cost or 0) * self.units_purchased
-
     def vendor_url(self):
         try:
             return self.vendor.lookup_url % self.catalog
