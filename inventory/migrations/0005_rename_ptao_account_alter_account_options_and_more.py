@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("inventory", "0004_alter_category_id_alter_item_id_and_more"),
     ]

@@ -6,20 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('inventory', '0002_auto_20170623_1716'),
+        ("inventory", "0002_auto_20170623_1716"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='manufacturer',
-            name='rep_email',
+            model_name="manufacturer",
+            name="rep_email",
             field=models.CharField(blank=True, max_length=64, null=True),
         ),
         migrations.AddField(
-            model_name='vendor',
-            name='rep_email',
+            model_name="vendor",
+            name="rep_email",
             field=models.CharField(blank=True, max_length=64, null=True),
         ),
     ]

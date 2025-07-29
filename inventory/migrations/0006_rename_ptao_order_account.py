@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("inventory", "0005_rename_ptao_account_alter_account_options_and_more"),
     ]

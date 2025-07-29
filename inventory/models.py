@@ -4,7 +4,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Count, Q, F, Sum
+from django.db.models import Count, F, Q, Sum
 from django.urls import reverse
 
 
@@ -193,7 +193,9 @@ class Order(models.Model):
         return reverse("inventory:order", kwargs={"pk": self.pk})
 
     def total_cost(self):
-        totals = self.orderitem_set.with_totals().aggregate(Sum("total_cost", default=0))
+        totals = self.orderitem_set.with_totals().aggregate(
+            Sum("total_cost", default=0)
+        )
         return totals["total_cost__sum"]
 
     def mark_placed(self):
@@ -202,18 +204,19 @@ class Order(models.Model):
         self.save()
 
     def add_item(self, item: Item, n_units: int, cost_per_unit: float) -> "OrderItem":
-        return OrderItem.objects.create(item=item, order=self, units_purchased=n_units, cost=cost_per_unit)
+        return OrderItem.objects.create(
+            item=item, order=self, units_purchased=n_units, cost=cost_per_unit
+        )
 
     class Meta:
         ordering = ["-created"]
 
 
 class OrderItemQuerySet(models.QuerySet):
-
     def with_totals(self):
         return self.annotate(total_cost=F("cost") * F("units_purchased"))
 
-    
+
 class OrderItem(models.Model):
     id = models.AutoField(primary_key=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)

@@ -4,50 +4,49 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('inventory', '0003_add_vendor_email'),
+        ("inventory", "0003_add_vendor_email"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='category',
-            name='id',
+            model_name="category",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='item',
-            name='id',
+            model_name="item",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='manufacturer',
-            name='id',
+            model_name="manufacturer",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='id',
+            model_name="order",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='orderitem',
-            name='id',
+            model_name="orderitem",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='ptao',
-            name='id',
+            model_name="ptao",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='unit',
-            name='id',
+            model_name="unit",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='vendor',
-            name='id',
+            model_name="vendor",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
     ]
