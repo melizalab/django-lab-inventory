@@ -4,7 +4,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Count, Q
+from django.db.models import Count, Q, F, Sum
 from django.urls import reverse
 
 
@@ -157,7 +157,7 @@ class Item(models.Model):
         ]
 
 
-class OrderManager(models.Manager):
+class OrderQuerySet(models.QuerySet):
     def with_counts(self):
         today = datetime.date.today()
         return self.annotate(
@@ -165,6 +165,7 @@ class OrderManager(models.Manager):
             item_received_count=Count(
                 "orderitem", filter=Q(orderitem__date_arrived__lte=today)
             ),
+            completed=F("item_count") == F("item_received_count"),
         )
 
 
@@ -179,7 +180,7 @@ class Order(models.Model):
     ordered = models.BooleanField(default=False)
     order_date = models.DateField(default=datetime.date.today)
     ordered_by = models.ForeignKey(User, on_delete=models.PROTECT)
-    objects = OrderManager()
+    objects = OrderQuerySet.as_manager()
 
     def __str__(self):
         if self.ordered:
@@ -191,15 +192,28 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse("inventory:order", kwargs={"pk": self.pk})
 
+    def total_cost(self):
+        totals = self.orderitem_set.with_totals().aggregate(Sum("total_cost", default=0))
+        return totals["total_cost__sum"]
+
     def mark_placed(self):
         self.order_date = datetime.date.today()
         self.ordered = True
         self.save()
 
+    def add_item(self, item: Item, n_units: int, cost_per_unit: float) -> "OrderItem":
+        return OrderItem.objects.create(item=item, order=self, units_purchased=n_units, cost=cost_per_unit)
+
     class Meta:
         ordering = ["-created"]
 
 
+class OrderItemQuerySet(models.QuerySet):
+
+    def with_totals(self):
+        return self.annotate(total_cost=F("cost") * F("units_purchased"))
+
+    
 class OrderItem(models.Model):
     id = models.AutoField(primary_key=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
@@ -228,10 +242,11 @@ class OrderItem(models.Model):
         blank=True,
         null=True,
     )
-
     reconciled = models.BooleanField(default=False)
 
-    def total_price(self):
+    objects = OrderItemQuerySet.as_manager()
+
+    def total_cost(self):
         return (self.cost or 0) * self.units_purchased
 
     def name(self):

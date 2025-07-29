@@ -43,6 +43,7 @@ django_find_project = false
 python_files = ["test_*.py", "*_test.py"]
 addopts = "-v --cov=inventory --cov-report=term-missing"
 testpaths = ["inventory/tests"]
+env_viles = [".env", ".test.env", "deploy.env"]
 
 [tool.black]
 line-length = 88
@@ -77,6 +78,7 @@ dev = [
     "pytest>=8.3.3,<9",
     "pytest-django>=4.9.0",
     "ruff>=0.7.0",
+    "pytest-dotenv>=0.5.2",
 ]
 
 [tool.hatch.build]
