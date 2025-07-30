@@ -178,7 +178,7 @@ class Order(models.Model):
         Account, blank=True, null=True, on_delete=models.SET_NULL
     )
     ordered = models.BooleanField(default=False)
-    order_date = models.DateField(default=datetime.date.today)
+    order_date = models.DateField(default=datetime.date.today, blank=True, null=True)
     ordered_by = models.ForeignKey(User, on_delete=models.PROTECT)
     objects = OrderQuerySet.as_manager()
 

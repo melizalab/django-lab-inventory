@@ -83,7 +83,7 @@ class OrderItemAdmin(admin.ModelAdmin):
         "expiry_years",
         "reconciled",
     )
-    list_display = ("name", "order_date", "date_arrived", "total_price", "location")
+    list_display = ("name", "order_date", "date_arrived", "total_cost", "location")
     list_filter = ("item__name", "order__order_date", "date_arrived", "location")
 
 
