@@ -18,7 +18,7 @@ class OrderItemInline(admin.StackedInline):
 
 
 class ItemAdmin(admin.ModelAdmin):
-    date_hierarchy = "date_added"
+    date_hierarchy = "created_at"
 
     fieldsets = [
         (None, {"fields": ["name", "chem_formula", "category"]}),
@@ -43,9 +43,9 @@ class ItemAdmin(admin.ModelAdmin):
         "category",
         "vendor",
         "catalog",
-        "date_added",
+        "created_at",
     )
-    list_filter = ("category", "vendor", "manufacturer", "date_added")
+    list_filter = ("category", "vendor", "manufacturer", "created_at")
     search_fields = ("name", "chem_formula", "manufacturer_number", "comments")
     inlines = (OrderItemInline,)
 
@@ -54,16 +54,15 @@ admin.site.register(Item, ItemAdmin)
 
 
 class OrderAdmin(admin.ModelAdmin):
-    date_hierarchy = "order_date"
+    date_hierarchy = "placed_on"
     fields = (
         "name",
-        "order_date",
-        "ordered_by",
-        "ordered",
+        "placed_on",
+        "placed_by",
         "account",
     )
-    list_display = ("name", "order_date", "ordered", "account")
-    list_filter = ("ordered", "account", "ordered_by")
+    list_display = ("name", "placed_on", "account")
+    list_filter = ("account", "placed_by")
     search_fields = ("name",)
     inlines = (OrderItemInline,)
 
@@ -72,19 +71,19 @@ admin.site.register(Order, OrderAdmin)
 
 
 class OrderItemAdmin(admin.ModelAdmin):
-    date_hierarchy = "date_arrived"
+    date_hierarchy = "arrived_on"
     fields = (
         "units_purchased",
         "cost",
-        "date_arrived",
+        "arrived_on",
         "serial",
         "uva_equip",
         "location",
         "expiry_years",
         "reconciled",
     )
-    list_display = ("name", "order_date", "date_arrived", "total_cost", "location")
-    list_filter = ("item__name", "order__order_date", "date_arrived", "location")
+    list_display = ("name", "ordered_on", "arrived_on", "total_cost", "location")
+    list_filter = ("item__name", "location")
 
 
 admin.site.register(OrderItem, OrderItemAdmin)

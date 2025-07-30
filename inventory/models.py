@@ -112,7 +112,7 @@ class Item(models.Model):
     )
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    date_added = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     parent_item = models.ForeignKey(
         "self",
         blank=True,
@@ -128,11 +128,8 @@ class Item(models.Model):
     def unit_size(self):
         if self.unit.name == "each":
             return self.unit.name
-        return "%s%s%s" % (
-            self.size or "",
-            "" if str(self.unit).startswith("/") else " ",
-            self.unit,
-        )
+        space = "" if str(self.unit).startswith("/") else " "
+        return f"{self.size or ''}{space}{self.unit}"
 
     def vendor_url(self):
         try:
@@ -158,36 +155,42 @@ class Item(models.Model):
 
 
 class OrderQuerySet(models.QuerySet):
-    def with_counts(self):
-        today = datetime.date.today()
+    def with_counts(self, on_date: datetime.date | None = None):
+        on_date = on_date or datetime.date.today()
         return self.annotate(
             item_count=Count("orderitem"),
             item_received_count=Count(
-                "orderitem", filter=Q(orderitem__date_arrived__lte=today)
+                "orderitem", filter=Q(orderitem__arrived_on__lte=on_date)
             ),
-            completed=F("item_count") == F("item_received_count"),
         )
+
+    def completed(self, on_date: datetime.date | None = None):
+        return (
+            self.placed()
+            .with_counts(on_date)
+            .filter(item_count=F("item_received_count"))
+        )
+
+    def placed(self, on_date: datetime.date | None = None):
+        return self.filter(placed_on__lte=on_date or datetime.date.today())
 
 
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64)
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     items = models.ManyToManyField(Item, through="OrderItem")
+    # accounts = models.ManyToManyField(Account, blank=True)
     account = models.ForeignKey(
         Account, blank=True, null=True, on_delete=models.SET_NULL
     )
-    ordered = models.BooleanField(default=False)
-    order_date = models.DateField(default=datetime.date.today, blank=True, null=True)
-    ordered_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    placed_on = models.DateField(blank=True, null=True)
+    placed_by = models.ForeignKey(User, on_delete=models.PROTECT)
     objects = OrderQuerySet.as_manager()
 
     def __str__(self):
-        if self.ordered:
-            status = self.order_date
-        else:
-            status = "in progress"
-        return "%s (%s)" % (self.name, status)
+        status = self.placed_on or "in progress"
+        return f"{self.name} ({status})"
 
     def get_absolute_url(self):
         return reverse("inventory:order", kwargs={"pk": self.pk})
@@ -198,9 +201,8 @@ class Order(models.Model):
         )
         return totals["total_cost__sum"]
 
-    def mark_placed(self):
-        self.order_date = datetime.date.today()
-        self.ordered = True
+    def mark_placed(self, on_date: datetime.date | None = None):
+        self.placed_on = on_date or datetime.date.today()
         self.save()
 
     def add_item(self, item: Item, n_units: int, cost_per_unit: float) -> "OrderItem":
@@ -209,7 +211,7 @@ class Order(models.Model):
         )
 
     class Meta:
-        ordering = ["-created"]
+        ordering = ["-created_at"]
 
 
 class OrderItemQuerySet(models.QuerySet):
@@ -227,7 +229,7 @@ class OrderItem(models.Model):
         "Cost per unit", max_digits=10, decimal_places=2, blank=True, null=True
     )
 
-    date_arrived = models.DateField(blank=True, null=True)
+    arrived_on = models.DateField(blank=True, null=True)
     serial = models.CharField("Serial number", max_length=45, blank=True, null=True)
     uva_equip = models.CharField(
         "UVa equipment number", max_length=32, blank=True, null=True
@@ -255,11 +257,15 @@ class OrderItem(models.Model):
     def name(self):
         return self.item.name
 
-    def order_date(self):
-        return self.order.order_date
+    def ordered_on(self):
+        return self.order.placed_on
 
     def __str__(self):
-        return "%s [%s]" % (self.item.name, self.order.order_date)
+        return f"{self.name()} [{self.ordered_on()}]"
+
+    def mark_arrived(self, on_date: datetime.date | None = None):
+        self.arrived_on = on_date or datetime.date.today()
+        self.save()
 
     class Meta:
         db_table = "inventory_order_items"

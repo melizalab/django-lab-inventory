@@ -36,15 +36,15 @@ class PaginatedFilterView(FilterView):
 
 class OrderFilter(filters.FilterSet):
     name = filters.CharFilter(field_name="name", lookup_expr="icontains", label="Name")
-    ordered_by = filters.CharFilter(
-        field_name="ordered_by__username", lookup_expr="istartswith", label="Ordered by"
+    placed_by = filters.CharFilter(
+        field_name="placed_by__username", lookup_expr="istartswith", label="Placed by"
     )
     account = filters.CharFilter(
         field_name="account__description", lookup_expr="icontains", label="Account"
     )
     # example of a drop-down filter. I don't like how these look though
-    # ordered_by = filters.ModelChoiceFilter(
-    #     field_name="ordered_by",
+    # placed_by = filters.ModelChoiceFilter(
+    #     field_name="placed_by",
     #     queryset=User.objects.all(),
     #     label="User",
     #     to_field_name="username",
@@ -52,7 +52,7 @@ class OrderFilter(filters.FilterSet):
 
     class Meta:
         model = Order
-        fields = ["name", "ordered_by", "account"]
+        fields = ["name", "placed_by", "account"]
 
 
 class ItemFilter(filters.FilterSet):
@@ -97,7 +97,7 @@ class OrderList(PaginatedFilterView):
 
     def get_queryset(self):
         qs = Order.objects.with_counts().filter(**self.kwargs)
-        return qs.order_by("-created")
+        return qs.order_by("-created_at")
 
 
 class OrderView(generic.DetailView):
@@ -119,7 +119,7 @@ def order_entry(request):
             order = form.save()
             return redirect("inventory:order", pk=order.id)
     else:
-        form = NewOrderForm(initial={"ordered_by": request.user})
+        form = NewOrderForm(initial={"placed_by": request.user})
     return TemplateResponse(request, "inventory/order_entry.html", {"form": form})
 
 
@@ -146,7 +146,7 @@ class ItemList(PaginatedFilterView):
 
     def get_queryset(self):
         qs = Item.objects.filter(**self.kwargs)
-        return qs.order_by("-date_added")
+        return qs.order_by("-created_at")
 
 
 class ItemView(generic.DetailView, generic.FormView):
@@ -157,7 +157,7 @@ class ItemView(generic.DetailView, generic.FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["lineitems"] = context["item"].orderitem_set.order_by(
-            "-order__order_date"
+            "-order__placed_on"
         )
         return context
 
