@@ -9,10 +9,11 @@
 <hr>
 
 <dl class="dl-horizontal">
-  <dt>{{order.ordered|yesno:"ordered on,created on"}}</dt><dd>{{ order.order_date }}</dd>
-  <dt>created by<dt><dd>{{ order.ordered_by.username}}</dd>
+  <dt>created on</dt><dd>{{ order.created_at.date }}</dd>
   <dt>account</dt><dd>{{ order.account }}</dd>
-  <dt>status</dt><dd>{{ order.ordered|yesno:"ordered,in progress" }}</dd>
+  <dt>placed on</dt><dd>{{ order.placed_on|default_if_none:"(in progress)" }}</dd>
+  <dt>placed by</dt><dd>{{ order.placed_by.username}}</dd>
+  <dt>total cost</dt><dd>{{ order.total_cost }}</dd>
 </dl>
 
 <h3>items</h3>
@@ -25,14 +26,12 @@
     <th>Unit</th>
     <th>Price</th>
     <th>Quantity</th>
-    <th>Total Price</th>
-    {% if order.ordered %}
+    <th>Cost</th>
+    {% if order.placed_on %}
     <th>Received</th>
     {% endif %}
     <th></th>
-    {% if not order.ordered %}
     <th></th>
-    {% endif %}
   </thead>
   <tbody>
     {% for oit in orderitem_list %}
@@ -49,15 +48,19 @@
           <td>{{ oit.item.unit_size }}</td>
           <td>{{ oit.cost }}</td>
           <td>{{ oit.units_purchased }}</td>
-          <td>{{ oit.total_price }}</td>
-	  {% if order.ordered %}
-	  <td>{{ oit.date_arrived|default:"no" }}</td>
+          <td>{{ oit.total_cost }}</td>
+	  {% if order.placed_on %}
+	  <td>{{ oit.arrived_on|default:"no" }}</td>
 	  {% endif %}
           <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}"
                  class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></a></td>
-	  {% if not order.ordered %}
+	  {% if order.placed_on and not oit.arrived_on %}
+	  <td><a href="asdf" class="glyphicon glyphicon-check" alt="[mark received]" aria-label="Mark Received"></a></td>
+	  {% elif not order.placed_on %}
           <td><a href="{% url 'inventory:remove_item_from_order' oit.id %}"
                  class="glyphicon glyphicon-trash" alt="[delete]" aria-label="Delete"></a></td>
+	  {% else %}
+	  <td></td>
 	  {% endif %}
         </tr>
     {% endfor %}
@@ -67,9 +70,9 @@
 
 <hr>
 
-<p>To update information about an item after it has been received, click the <span class="glyphicon glyphicon-edit" alt="[edit]".  aria-label="Edit"></span> icon. {% if not order.ordered %} To add items to this order, search the <a href="{% url 'inventory:items' %}">items list</a> or <a href="{% url 'inventory:new_item' %}">add a new item</a>. To remove an item from the order, click the <span class="glyphicon glyphicon-trash" alt="[delete]" aria-label="Delete"></span> icon. {% endif %} </p>
+<p>To update information about an item after it has been received, click the <span class="glyphicon glyphicon-edit" alt="[edit]".  aria-label="Edit"></span> icon. {% if not order.placed_on %} To add items to this order, search the <a href="{% url 'inventory:items' %}">items list</a> or <a href="{% url 'inventory:new_item' %}">add a new item</a>. To remove an item from the order, click the <span class="glyphicon glyphicon-trash" alt="[delete]" aria-label="Delete"></span> icon. {% else %} To mark an item as received, click the <span class="glyphicon glyphicon-check" alt="[mark received]" aria-label="Mark Received"></span> icon. {% endif %} </p>
 <a href="{% url 'inventory:orders' %}">back to order list</a><br/>
-{% if not order.ordered %}<a href="{% url 'inventory:mark_order_placed' order.id %}">mark this order as placed</a><br/>{% endif %}
+{% if not order.placed_on %}<a href="{% url 'inventory:mark_order_placed' order.id %}">mark this order as placed</a><br/>{% endif %}
 <a href="{% url 'admin:inventory_order_change' order.id %}">edit order (advanced users only)</a><br/>
 
 {% endblock %}

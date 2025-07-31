@@ -59,11 +59,11 @@
   <tbody>
     {% for oit in lineitems.iterator %}
     <tr>
-      <td><a href="{% url 'inventory:order' oit.order.id %}">{{ oit.order.order_date }}</a></td>
+      <td><a href="{% url 'inventory:order' oit.order.id %}">{{ oit.order.placed_on|default_if_none:"(in progress)" }}</a></td>
       <td>{{ oit.cost }}</td>
       <td>{{ oit.units_purchased }}</td>
-      <td>{{ oit.total_price }}</td>
-      <td>{{ oit.date_arrived|default:"no" }}</td>
+      <td>{{ oit.total_cost }}</td>
+      <td>{{ oit.arrived_on|default:"no" }}</td>
       <td>{{ oit.location|default:"" }}</td>
       <td>{{ oit.serial|default:"" }}</td>
       <td>{{ oit.uva_equip|default:"" }}</td>

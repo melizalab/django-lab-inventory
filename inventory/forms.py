@@ -10,7 +10,7 @@ from inventory.models import Account, Item, Order, OrderItem, Vendor
 
 class NewOrderForm(forms.ModelForm):
     name = forms.CharField(label="Order Name")
-    ordered_by = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True))
+    placed_by = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True))
     account = forms.ModelChoiceField(
         queryset=Account.objects.exclude(expires__lt=datetime.date.today()),
         required=False,
@@ -18,7 +18,7 @@ class NewOrderForm(forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = ["name", "ordered_by", "account"]
+        fields = ["name", "placed_by", "account"]
 
 
 class ConfirmOrderForm(forms.ModelForm):
@@ -58,7 +58,7 @@ class NewItemForm(forms.ModelForm):
 
 class NewOrderItemForm(forms.ModelForm):
     order = forms.ModelChoiceField(
-        queryset=Order.objects.filter(ordered=False),
+        queryset=Order.objects.not_placed(),
         required=True,
         label="Choose an in-progress order",
     )

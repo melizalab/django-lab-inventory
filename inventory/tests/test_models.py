@@ -102,6 +102,7 @@ def test_order_unplaced(sentinel_user):
         name="yearly unicorn paste supply", account=account, placed_by=sentinel_user
     )
 
+    assert order in Order.objects.not_placed()
     assert order not in Order.objects.placed()
     assert order not in Order.objects.completed()
 
@@ -114,6 +115,7 @@ def test_order_placed(sentinel_user):
     )
     order.mark_placed()
 
+    assert order not in Order.objects.not_placed()
     assert order in Order.objects.placed()
     assert order in Order.objects.completed()
 
@@ -147,5 +149,6 @@ def test_order_completed(sentinel_user):
     oitem_1.mark_arrived()
     oitem_2.mark_arrived()
 
+    assert order not in Order.objects.not_placed()
     assert order in Order.objects.placed()
     assert order in Order.objects.completed()

@@ -174,6 +174,9 @@ class OrderQuerySet(models.QuerySet):
     def placed(self, on_date: datetime.date | None = None):
         return self.filter(placed_on__lte=on_date or datetime.date.today())
 
+    def not_placed(self, on_date: datetime.date | None = None):
+        return self.exclude(placed_on__lte=on_date or datetime.date.today())
+
 
 class Order(models.Model):
     id = models.AutoField(primary_key=True)

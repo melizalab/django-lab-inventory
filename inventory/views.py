@@ -42,13 +42,6 @@ class OrderFilter(filters.FilterSet):
     account = filters.CharFilter(
         field_name="account__description", lookup_expr="icontains", label="Account"
     )
-    # example of a drop-down filter. I don't like how these look though
-    # placed_by = filters.ModelChoiceFilter(
-    #     field_name="placed_by",
-    #     queryset=User.objects.all(),
-    #     label="User",
-    #     to_field_name="username",
-    # )
 
     class Meta:
         model = Order
@@ -66,7 +59,7 @@ class ItemFilter(filters.FilterSet):
         method="by_catalog_or_part", label="Catalog/Part Number"
     )
     category = filters.CharFilter(
-        field_name="category__name", lookup_expr="istartswith", label="Category"
+        field_name="category__name", lookup_expr="icontains", label="Category"
     )
 
     def by_vendor_or_mfg(self, queryset, name, value):
@@ -80,7 +73,7 @@ class ItemFilter(filters.FilterSet):
         )
 
     class Meta:
-        model = Order
+        model = Item
         fields = [
             "name",
             "vendor_or_mfg",
