@@ -93,6 +93,18 @@ class OrderList(PaginatedFilterView):
         return qs.order_by("-created_at")
 
 
+class UnplacedOrderList(OrderList):
+    def get_queryset(self):
+        qs = Order.objects.with_counts().not_placed().filter(**self.kwargs)
+        return qs.order_by("-created_at")
+
+
+class IncompleteOrderList(OrderList):
+    def get_queryset(self):
+        qs = Order.objects.with_counts().not_completed().filter(**self.kwargs)
+        return qs.order_by("-created_at")
+
+
 class OrderView(generic.DetailView):
     model = Order
     template_name = "inventory/order.html"

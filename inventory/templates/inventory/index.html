@@ -7,14 +7,16 @@
 <p>This web application allows you to interact with the inventory database. The database contains records of <a href="{% url 'inventory:items' %}">items</a>, which are specific things or services sold by <a href="">vendors</a>. Items are associated with <a href="{% url 'inventory:orders' %}">orders</a></li>, which are requests by an individual to make a purchase using funds from an <a href="">account</a>.
 
 <ul>
-  <li><a href="{% url 'inventory:orders' %}">list and search orders</a></li>
-  <li><a href="{% url 'inventory:items' %}">list and search items</a></li>
+  <li><a href="{% url 'inventory:new_order' %}">create a new order</a></li>
+  <li><a href="{% url 'inventory:unplaced-orders' %}">list and search unplaced (in progress) orders</a></li>
+  <li><a href="{% url 'inventory:unplaced-orders' %}">list and search orders with unreceived items</a></li>
+  <li><a href="{% url 'inventory:orders' %}">list and search all orders</a></li>
 </ul>
 
 <p>To order something, you create an order and assign items to it. When an item is added to an order, you enter per-order information like price and quantity. If an item doesn't exist in the database, you'll need to create it and then add it to the order. </p>
 
 <ul>
-  <li><a href="{% url 'inventory:new_order' %}">create a new order</a></li>
+  <li><a href="{% url 'inventory:items' %}">list and search items</a></li>
   <li><a href="{% url 'inventory:new_item' %}">add a new item</a></li>
 </ul>
 

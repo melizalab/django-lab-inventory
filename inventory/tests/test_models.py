@@ -104,6 +104,7 @@ def test_order_unplaced(sentinel_user):
 
     assert order in Order.objects.not_placed()
     assert order not in Order.objects.placed()
+    assert order not in Order.objects.not_completed()
     assert order not in Order.objects.completed()
 
 
@@ -117,6 +118,7 @@ def test_order_placed(sentinel_user):
 
     assert order not in Order.objects.not_placed()
     assert order in Order.objects.placed()
+    assert order not in Order.objects.not_completed()
     assert order in Order.objects.completed()
 
 
@@ -151,4 +153,39 @@ def test_order_completed(sentinel_user):
 
     assert order not in Order.objects.not_placed()
     assert order in Order.objects.placed()
+    assert order not in Order.objects.not_completed()
     assert order in Order.objects.completed()
+
+
+@pytest.mark.django_db
+def test_order_not_completed(sentinel_user):
+    category = Category.objects.create(name="glues and pastes")
+    unit = Unit.objects.create(name="each")
+    vendor = Vendor.objects.create(name="Unicorn Dispensary")
+    account = Account.objects.create(code="1234", description="unicorn paste fund")
+    order = Order.objects.create(
+        name="yearly unicorn paste supply", account=account, placed_by=sentinel_user
+    )
+    item_1 = Item.objects.create(
+        name="unicorn paste",
+        category=category,
+        unit=unit,
+        vendor=vendor,
+        catalog="UPASTE1",
+    )
+    item_2 = Item.objects.create(
+        name="unicorn paste adapter",
+        category=category,
+        unit=unit,
+        vendor=vendor,
+        catalog="UPADAPT",
+    )
+    oitem_1 = order.add_item(item=item_1, n_units=10, cost_per_unit=20)
+    oitem_2 = order.add_item(item=item_2, n_units=1, cost_per_unit=200)
+    order.mark_placed()
+    oitem_1.mark_arrived()
+
+    assert order not in Order.objects.not_placed()
+    assert order in Order.objects.placed()
+    assert order in Order.objects.not_completed()
+    assert order not in Order.objects.completed()

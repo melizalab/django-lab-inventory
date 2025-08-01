@@ -9,6 +9,12 @@ app_name = "inventory"
 urlpatterns = [
     path("", views.index, name="index"),
     path("orders/", views.OrderList.as_view(), name="orders"),
+    path("orders/unplaced/", views.UnplacedOrderList.as_view(), name="unplaced-orders"),
+    path(
+        "orders/incomplete/",
+        views.IncompleteOrderList.as_view(),
+        name="incomplete-orders",
+    ),
     path("orders/new/", login_required(views.order_entry), name="new_order"),
     path(r"orders/<int:pk>/", views.OrderView.as_view(), name="order"),
     path(

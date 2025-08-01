@@ -164,6 +164,12 @@ class OrderQuerySet(models.QuerySet):
             ),
         )
 
+    def placed(self, on_date: datetime.date | None = None):
+        return self.filter(placed_on__lte=on_date or datetime.date.today())
+
+    def not_placed(self, on_date: datetime.date | None = None):
+        return self.exclude(placed_on__lte=on_date or datetime.date.today())
+
     def completed(self, on_date: datetime.date | None = None):
         return (
             self.placed()
@@ -171,11 +177,12 @@ class OrderQuerySet(models.QuerySet):
             .filter(item_count=F("item_received_count"))
         )
 
-    def placed(self, on_date: datetime.date | None = None):
-        return self.filter(placed_on__lte=on_date or datetime.date.today())
-
-    def not_placed(self, on_date: datetime.date | None = None):
-        return self.exclude(placed_on__lte=on_date or datetime.date.today())
+    def not_completed(self, on_date: datetime.date | None = None):
+        return (
+            self.placed()
+            .with_counts(on_date)
+            .filter(item_count__gt=F("item_received_count"))
+        )
 
 
 class Order(models.Model):
