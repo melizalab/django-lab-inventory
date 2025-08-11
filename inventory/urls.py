@@ -35,4 +35,9 @@ urlpatterns = [
         login_required(views.OrderItemDelete.as_view()),
         name="remove_item_from_order",
     ),
+    path(
+        "orderitems/<int:pk>/mark-received/",
+        login_required(views.mark_orderitem_received),
+        name="mark_orderitem_received",
+    ),
 ]

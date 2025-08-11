@@ -32,6 +32,14 @@ class ConfirmOrderForm(forms.ModelForm):
         fields = ["account"]
 
 
+class OrderItemReceivedForm(forms.ModelForm):
+    received_on = forms.DateField()
+
+    class Meta:
+        model = OrderItem
+        fields = ["received_on"]
+        
+
 class NewItemForm(forms.ModelForm):
     name = forms.CharField(label="Item Name")
     vendor = forms.ModelChoiceField(queryset=Vendor.objects.all(), required=True)

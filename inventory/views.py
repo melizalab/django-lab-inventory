@@ -133,13 +133,27 @@ def mark_order_placed(request, order_id):
     if request.method == "POST":
         form = ConfirmOrderForm(request.POST, instance=order)
         if form.is_valid():
-            order = form.save(commit=False)
+            # order = form.save(commit=False)
             order.mark_placed()
             return redirect("inventory:order", pk=order_id)
     else:
         form = ConfirmOrderForm(instance=order)
     return TemplateResponse(
         request, "inventory/order_mark_placed.html", {"order": order, "form": form}
+    )
+
+
+def mark_orderitem_received(request, orderitem_id):
+    orderitem = get_object_or_404(OrderItem, id=orderitem_id)
+    if request.method == "POST":
+        form = OrderItemReceivedForm(request.POST, instance=orderitem)
+        if form.is_valid():
+            orderitem.mark_received(form.cleaned_data["received_on"])
+            return redirect("inventory:order", pk=orderitem.order)
+    else:
+        form = OrderItemReceived(instance=orderitem)
+    return TemplateResponse(
+        request, "inventory/orderitem_mark_received.html", {"orderitem": orderitem, "form": form}
     )
 
 
