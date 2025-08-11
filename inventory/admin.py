@@ -6,6 +6,7 @@ from inventory.models import (
     Item,
     Manufacturer,
     Order,
+    OrderAccount,
     OrderItem,
     Unit,
     Vendor,
@@ -14,6 +15,11 @@ from inventory.models import (
 
 class OrderItemInline(admin.StackedInline):
     model = OrderItem
+    extra = 1
+
+
+class OrderAccountInline(admin.StackedInline):
+    model = OrderAccount
     extra = 1
 
 
@@ -50,24 +56,22 @@ class ItemAdmin(admin.ModelAdmin):
     inlines = (OrderItemInline,)
 
 
-admin.site.register(Item, ItemAdmin)
-
-
 class OrderAdmin(admin.ModelAdmin):
     date_hierarchy = "placed_on"
     fields = (
         "name",
         "placed_on",
         "requested_by",
-        "account",
     )
-    list_display = ("name", "placed_on", "account")
-    list_filter = ("account", "requested_by")
+    list_display = ("name", "placed_on", "display_accounts")
+    list_filter = ("accounts", "requested_by")
     search_fields = ("name",)
-    inlines = (OrderItemInline,)
+    inlines = (OrderItemInline, OrderAccountInline)
 
+    def display_accounts(self, obj):
+        return ", ".join([acc.code for acc in obj.accounts.all()])
 
-admin.site.register(Order, OrderAdmin)
+    display_accounts.short_description = "Accounts"
 
 
 class OrderItemAdmin(admin.ModelAdmin):
@@ -86,15 +90,15 @@ class OrderItemAdmin(admin.ModelAdmin):
     list_filter = ("item__name", "location")
 
 
-admin.site.register(OrderItem, OrderItemAdmin)
-
-
 class AccountAdmin(admin.ModelAdmin):
     fields = ("code", "description", "expires")
     list_display = fields
 
 
+admin.site.register(Item, ItemAdmin)
 admin.site.register(Account, AccountAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderItem, OrderItemAdmin)
 
 for model in (Category, Unit, Manufacturer, Vendor):
     admin.site.register(model)

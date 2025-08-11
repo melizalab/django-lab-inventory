@@ -190,9 +190,8 @@ class Order(models.Model):
     name = models.CharField(max_length=64)
     created_at = models.DateTimeField(auto_now_add=True)
     items = models.ManyToManyField(Item, through="OrderItem")
-    # accounts = models.ManyToManyField(Account, blank=True)
-    account = models.ForeignKey(
-        Account, blank=True, null=True, on_delete=models.SET_NULL
+    accounts = models.ManyToManyField(
+        Account, through="OrderAccount", blank=True, related_name="orders"
     )
     placed_on = models.DateField(blank=True, null=True)
     requested_by = models.ForeignKey(
@@ -221,6 +220,15 @@ class Order(models.Model):
         return OrderItem.objects.create(
             item=item, order=self, units_purchased=n_units, cost=cost_per_unit
         )
+
+    def add_account(self, account: Account) -> "OrderAccount":
+        return OrderAccount.objects.create(order=self, account=account)
+
+    def account_codes(self) -> str:
+        return ", ".join(acct.code for acct in self.accounts.all())
+
+    def account_descriptions(self) -> str:
+        return ", ".join(str(acct) for acct in self.accounts.all())
 
     class Meta:
         ordering = ["-created_at"]
@@ -281,3 +289,26 @@ class OrderItem(models.Model):
 
     class Meta:
         db_table = "inventory_order_items"
+
+
+class OrderAccount(models.Model):
+    """
+    Through model for Order-Account relationship.
+    Allows for future additions like allocation percentages, notes, etc.
+    """
+
+    id = models.AutoField(primary_key=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Future fields can be added here without changing the relationship structure
+    # e.g., allocation_percentage, notes, etc.
+
+    class Meta:
+        db_table = "inventory_order_accounts"
+        unique_together = ["order", "account"]
+        ordering = ["account__code"]
+
+    def __str__(self):
+        return f"{self.order.name} - {self.account.code}"

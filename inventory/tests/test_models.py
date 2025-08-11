@@ -3,7 +3,15 @@
 import pytest
 from django.contrib.auth import get_user_model
 
-from inventory.models import Account, Category, Item, Order, OrderItem, Unit, Vendor
+from inventory.models import (
+    Account,
+    Category,
+    Item,
+    Order,
+    OrderItem,
+    Unit,
+    Vendor,
+)
 
 
 @pytest.fixture
@@ -25,8 +33,10 @@ def test_orderitem_cost(sentinel_user):
         catalog="UPASTE1",
     )
     order = Order.objects.create(
-        name="yearly unicorn paste supply", account=account, requested_by=sentinel_user
+        name="yearly unicorn paste supply", requested_by=sentinel_user
     )
+    order.add_account(account)
+
     orderitem = OrderItem.objects.create(
         item=item, order=order, units_purchased=10, cost=20
     )
@@ -42,8 +52,10 @@ def test_order_cost(sentinel_user):
     vendor = Vendor.objects.create(name="Unicorn Dispensary")
     account = Account.objects.create(code="1234", description="unicorn paste fund")
     order = Order.objects.create(
-        name="yearly unicorn paste supply", account=account, requested_by=sentinel_user
+        name="yearly unicorn paste supply", requested_by=sentinel_user
     )
+    order.add_account(account)
+
     item_1 = Item.objects.create(
         name="unicorn paste",
         category=category,
@@ -71,8 +83,10 @@ def test_order_counts(sentinel_user):
     vendor = Vendor.objects.create(name="Unicorn Dispensary")
     account = Account.objects.create(code="1234", description="unicorn paste fund")
     order = Order.objects.create(
-        name="yearly unicorn paste supply", account=account, requested_by=sentinel_user
+        name="yearly unicorn paste supply", requested_by=sentinel_user
     )
+    order.add_account(account)
+
     item_1 = Item.objects.create(
         name="unicorn paste",
         category=category,
@@ -99,8 +113,9 @@ def test_order_counts(sentinel_user):
 def test_order_unplaced(sentinel_user):
     account = Account.objects.create(code="1234", description="unicorn paste fund")
     order = Order.objects.create(
-        name="yearly unicorn paste supply", account=account, requested_by=sentinel_user
+        name="yearly unicorn paste supply", requested_by=sentinel_user
     )
+    order.add_account(account)
 
     assert order in Order.objects.not_placed()
     assert order not in Order.objects.placed()
@@ -112,8 +127,9 @@ def test_order_unplaced(sentinel_user):
 def test_order_placed(sentinel_user):
     account = Account.objects.create(code="1234", description="unicorn paste fund")
     order = Order.objects.create(
-        name="yearly unicorn paste supply", account=account, requested_by=sentinel_user
+        name="yearly unicorn paste supply", requested_by=sentinel_user
     )
+    order.add_account(account)
     order.mark_placed()
 
     assert order not in Order.objects.not_placed()
@@ -129,8 +145,10 @@ def test_order_completed(sentinel_user):
     vendor = Vendor.objects.create(name="Unicorn Dispensary")
     account = Account.objects.create(code="1234", description="unicorn paste fund")
     order = Order.objects.create(
-        name="yearly unicorn paste supply", account=account, requested_by=sentinel_user
+        name="yearly unicorn paste supply", requested_by=sentinel_user
     )
+    order.add_account(account)
+
     item_1 = Item.objects.create(
         name="unicorn paste",
         category=category,
@@ -164,8 +182,10 @@ def test_order_not_completed(sentinel_user):
     vendor = Vendor.objects.create(name="Unicorn Dispensary")
     account = Account.objects.create(code="1234", description="unicorn paste fund")
     order = Order.objects.create(
-        name="yearly unicorn paste supply", account=account, requested_by=sentinel_user
+        name="yearly unicorn paste supply", requested_by=sentinel_user
     )
+    order.add_account(account)
+
     item_1 = Item.objects.create(
         name="unicorn paste",
         category=category,
@@ -189,3 +209,22 @@ def test_order_not_completed(sentinel_user):
     assert order in Order.objects.placed()
     assert order in Order.objects.not_completed()
     assert order not in Order.objects.completed()
+
+
+@pytest.mark.django_db
+def test_order_with_multiple_accounts(sentinel_user):
+    account1 = Account.objects.create(code="1234", description="fund 1")
+    account2 = Account.objects.create(code="5678", description="fund 2")
+    account3 = Account.objects.create(code="9101", description="fund 3")
+    order = Order.objects.create(name="multi-account order", requested_by=sentinel_user)
+    order.add_account(account1)
+    order.add_account(account2)
+
+    assert order.accounts.count() == 2
+    assert account1 in order.accounts.all()
+    assert account2 in order.accounts.all()
+    assert account3 not in order.accounts.all()
+    assert order in account1.orders.all()
+    assert order in account2.orders.all()
+    assert order not in account3.orders.all()
+    assert order.account_codes() == "1234, 5678"

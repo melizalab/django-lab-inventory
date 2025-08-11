@@ -5,7 +5,7 @@ import datetime
 from django import forms
 from django.contrib.auth.models import User
 
-from inventory.models import Account, Item, Order, OrderItem, Vendor
+from inventory.models import Account, Item, Order, OrderAccount, OrderItem, Vendor
 
 
 class NewOrderForm(forms.ModelForm):
@@ -13,20 +13,33 @@ class NewOrderForm(forms.ModelForm):
     requested_by = forms.ModelChoiceField(
         queryset=User.objects.filter(is_active=True), label="Requested by"
     )
-    account = forms.ModelChoiceField(
+    accounts = forms.ModelMultipleChoiceField(
         queryset=Account.objects.exclude(expires__lt=datetime.date.today()),
         required=False,
+        widget=forms.CheckboxSelectMultiple,
+        label="Accounts (select all that apply)",
     )
+
+    def save(self, commit=True):
+        order = super().save(commit=commit)
+        if commit:
+            # Clear existing accounts and add selected ones
+            order.accounts.clear()
+            for account in self.cleaned_data["accounts"]:
+                OrderAccount.objects.create(order=order, account=account)
+        return order
 
     class Meta:
         model = Order
-        fields = ["name", "requested_by", "account"]
+        fields = ["name", "requested_by", "accounts"]
 
 
 class ConfirmOrderForm(forms.ModelForm):
-    account = forms.ModelChoiceField(
+    accounts = forms.ModelMultipleChoiceField(
         queryset=Account.objects.exclude(expires__lt=datetime.date.today()),
-        required=True,
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        label="Accounts (select at least one)",
     )
     requested_by = forms.ModelChoiceField(
         queryset=User.objects.filter(is_active=True),
@@ -34,9 +47,29 @@ class ConfirmOrderForm(forms.ModelForm):
         label="Requested by",
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields["accounts"].initial = self.instance.accounts.all()
+
+    def clean_accounts(self):
+        """Ensure at least one account is selected when confirming order"""
+        accounts = self.cleaned_data.get("accounts")
+        if not accounts:
+            raise forms.ValidationError("At least one account must be selected.")
+        return accounts
+
+    def save(self, commit=True):
+        order = super().save(commit=commit)
+        if commit:
+            order.accounts.clear()
+            for account in self.cleaned_data["accounts"]:
+                OrderAccount.objects.create(order=order, account=account)
+        return order
+
     class Meta:
         model = Order
-        fields = ["account", "requested_by"]
+        fields = ["accounts", "requested_by"]
 
 
 class OrderItemReceivedForm(forms.ModelForm):

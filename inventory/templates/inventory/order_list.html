@@ -26,7 +26,7 @@
     <th>Items</th>
     <th>Items Received</th>    
     <th>Requested by</ht>
-    <th>Account</th>
+    <th>Account(s)</th>
   </thead>
   <tbody>
     {% for order in order_list %}
@@ -36,7 +36,7 @@
           <td>{{ order.item_count }}</td>
           <td>{{ order.item_received_count }}</td>
 	  <td>{{ order.requested_by.get_full_name }}</td>
-          <td>{{ order.account.description }}</td>
+          <td>{{ order.account_codes }}</td>
         </tr>
     {% endfor %}
   </tbody>

@@ -18,7 +18,34 @@
       <div class="form-group {% if field.errors %}has-error{% endif %}">
         <label for="{{field.auto_id}}" class="col-sm-2 control-label">{{ field.label }}</label>
         <div class="col-sm-5">
-          {% render_field field class+="form-control" %}
+          {% if field.field.widget.input_type == 'checkbox' %}
+            {# Handle multiple checkboxes #}
+            {% if field.field.choices %}
+              <div>
+		{% for choice in field %}
+		<div class="checkbox">
+		  <label>
+		    {{ choice.tag }} {{ choice.choice_label }}
+		  </label>
+		</div>
+		{% endfor %}
+              </div>
+            {% else %}
+              {# Single checkbox #}
+              <div class="checkbox">
+                {% render_field field %}
+              </div>
+            {% endif %}
+          {% else %}
+            {# Regular form control #}
+            {% render_field field class+="form-control" %}
+          {% endif %}
+          {% if field.help_text %}
+            <p class="help-block">{{ field.help_text }}</p>
+          {% endif %}
+          {% if field.errors %}
+            <span class="help-block">{{ field.errors }}</span>
+          {% endif %}
         </div>
       </div>
       {% endfor %}

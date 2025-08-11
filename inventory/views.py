@@ -43,7 +43,7 @@ class OrderFilter(filters.FilterSet):
         label="Placed by",
     )
     account = filters.CharFilter(
-        field_name="account__description", lookup_expr="icontains", label="Account"
+        field_name="accounts__description", lookup_expr="icontains", label="Account"
     )
 
     class Meta:
