@@ -91,7 +91,7 @@ class OrderItemAdmin(admin.ModelAdmin):
 
 
 class AccountAdmin(admin.ModelAdmin):
-    fields = ("code", "description", "expires")
+    fields = ("code", "description", "expires_on")
     list_display = fields
 
 

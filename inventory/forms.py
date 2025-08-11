@@ -14,7 +14,7 @@ class NewOrderForm(forms.ModelForm):
         queryset=User.objects.filter(is_active=True), label="Requested by"
     )
     accounts = forms.ModelMultipleChoiceField(
-        queryset=Account.objects.exclude(expires__lt=datetime.date.today()),
+        queryset=Account.objects.exclude(expires_on__lt=datetime.date.today()),
         required=False,
         widget=forms.CheckboxSelectMultiple,
         label="Accounts (select all that apply)",
@@ -36,7 +36,7 @@ class NewOrderForm(forms.ModelForm):
 
 class ConfirmOrderForm(forms.ModelForm):
     accounts = forms.ModelMultipleChoiceField(
-        queryset=Account.objects.exclude(expires__lt=datetime.date.today()),
+        queryset=Account.objects.exclude(expires_on__lt=datetime.date.today()),
         required=False,
         widget=forms.CheckboxSelectMultiple,
         label="Accounts (select at least one)",

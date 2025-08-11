@@ -79,7 +79,7 @@ class Account(models.Model):
     id = models.AutoField(primary_key=True)
     code = models.CharField(max_length=64, unique=True)
     description = models.CharField(max_length=128)
-    expires = models.DateField(blank=True, null=True)
+    expires_on = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return "%s (%s)" % (self.description, self.code)
