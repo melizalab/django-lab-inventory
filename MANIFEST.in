@@ -1,7 +1,6 @@
-include README.md
+include README.rst
 include COPYING
-include setup.cfg
-include setup.py
 include inventory/migrations/*.py
 recursive-include inventory/templates *
-recursive-include docs *
+recursive-include inventory/tests *.py
+recursive-include inventory/fixtures *

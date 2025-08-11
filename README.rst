@@ -9,8 +9,8 @@ lab-inventory
 .. |Version| image:: https://img.shields.io/pypi/v/django-lab-inventory.svg
 .. _Version: https://pypi.python.org/pypi/django-lab-inventory/
 
-.. |BuildStatus| image:: https://github.com/melizalab/django-lab-inventory/actions/workflows/test.yml/badge.svg
-.. _BuildStatus: https://github.com/melizalab/django-lab-inventory/actions/workflows/test.yml
+.. |BuildStatus| image:: https://github.com/melizalab/django-lab-inventory/actions/workflows/tests.yml/badge.svg
+.. _BuildStatus: https://github.com/melizalab/django-lab-inventory/actions/workflows/tests.yml
 
 .. |License| image:: https://img.shields.io/pypi/l/django-lab-inventory.svg
 .. _License: https://opensource.org/license/bsd-3-clause/
@@ -48,14 +48,19 @@ Quick start
 
    INSTALLED_APPS = (
        ...
+       'widget_tweaks',  # For form tweaking
+       'django_filters',
        'inventory',
    )
 
-2. Include the inventory URLconf in your project urls.py like this::
+2. Include inventory in ``urlpatterns`` in your project ``urls.py``. Some of
+   the views link to the admin interface, so make sure that is included,
+   too:
 
 .. code:: python
 
-   re_path(r'^inventory/', include('inventory.urls')),
+       path("inventory/", include("inventory.urls")),
+       path("admin/", admin.site.urls),
 
 3. Run ``python manage.py migrate`` to create the inventory models.
 
