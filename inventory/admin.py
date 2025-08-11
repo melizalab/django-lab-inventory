@@ -58,11 +58,11 @@ class OrderAdmin(admin.ModelAdmin):
     fields = (
         "name",
         "placed_on",
-        "placed_by",
+        "requested_by",
         "account",
     )
     list_display = ("name", "placed_on", "account")
-    list_filter = ("account", "placed_by")
+    list_filter = ("account", "requested_by")
     search_fields = ("name",)
     inlines = (OrderItemInline,)
 

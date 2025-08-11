@@ -195,7 +195,9 @@ class Order(models.Model):
         Account, blank=True, null=True, on_delete=models.SET_NULL
     )
     placed_on = models.DateField(blank=True, null=True)
-    placed_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    requested_by = models.ForeignKey(
+        User, on_delete=models.PROTECT, verbose_name="Requested by"
+    )
     objects = OrderQuerySet.as_manager()
 
     def __str__(self):

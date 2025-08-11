@@ -12,7 +12,7 @@
   <dt>created on</dt><dd>{{ order.created_at.date }}</dd>
   <dt>account</dt><dd>{{ order.account }}</dd>
   <dt>placed on</dt><dd>{{ order.placed_on|default_if_none:"(in progress)" }}</dd>
-  <dt>placed by</dt><dd>{{ order.placed_by.username}}</dd>
+  <dt>requested by</dt><dd>{{ order.requested_by.get_full_name}}</dd>
   <dt>total cost</dt><dd>{{ order.total_cost }}</dd>
 </dl>
 

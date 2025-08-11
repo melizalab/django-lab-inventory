@@ -12,7 +12,7 @@
   <div class="panel-body">
     <form action="{% url 'inventory:mark_order_placed' order.id %}" class="form-horizontal" method="post" role="form">
       {% csrf_token %}
-      <p>Do you want to mark the in-progress order <strong>{{order.name}}</strong> as placed?</p>
+      <p>Click the Confirm button to mark the in-progress order <strong>{{order.name}}</strong> as placed. You can update account and user information using the fields below.</p>
 
       {% for field in form %}
       <div class="form-group {% if field.errors %}has-error{% endif %}">

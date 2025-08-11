@@ -36,8 +36,10 @@ class PaginatedFilterView(FilterView):
 
 class OrderFilter(filters.FilterSet):
     name = filters.CharFilter(field_name="name", lookup_expr="icontains", label="Name")
-    placed_by = filters.CharFilter(
-        field_name="placed_by__username", lookup_expr="istartswith", label="Placed by"
+    requested_by = filters.CharFilter(
+        field_name="requested_by__username",
+        lookup_expr="istartswith",
+        label="Placed by",
     )
     account = filters.CharFilter(
         field_name="account__description", lookup_expr="icontains", label="Account"
@@ -45,7 +47,7 @@ class OrderFilter(filters.FilterSet):
 
     class Meta:
         model = Order
-        fields = ["name", "placed_by", "account"]
+        fields = ["name", "requested_by", "account"]
 
 
 class ItemFilter(filters.FilterSet):
@@ -124,7 +126,7 @@ def order_entry(request):
             order = form.save()
             return redirect("inventory:order", pk=order.id)
     else:
-        form = NewOrderForm(initial={"placed_by": request.user})
+        form = NewOrderForm(initial={"requested_by": request.user})
     return TemplateResponse(request, "inventory/order_entry.html", {"form": form})
 
 

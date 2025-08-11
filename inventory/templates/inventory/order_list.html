@@ -25,7 +25,7 @@
     <th>Placed on</th>
     <th>Items</th>
     <th>Items Received</th>    
-    <th>Placed by</ht>
+    <th>Requested by</ht>
     <th>Account</th>
   </thead>
   <tbody>
@@ -35,7 +35,7 @@
 	  <td>{{ order.placed_on|default_if_none:"—" }}</td>
           <td>{{ order.item_count }}</td>
           <td>{{ order.item_received_count }}</td>
-	  <td>{{ order.placed_by }}</td>
+	  <td>{{ order.requested_by.get_full_name }}</td>
           <td>{{ order.account.description }}</td>
         </tr>
     {% endfor %}
