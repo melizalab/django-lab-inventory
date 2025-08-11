@@ -36,8 +36,8 @@ urlpatterns = [
         name="remove_item_from_order",
     ),
     path(
-        "orderitems/<int:pk>/mark-received/",
+        "orderitems/<int:orderitem_id>/mark-received/",
         login_required(views.mark_orderitem_received),
-        name="mark_orderitem_received",
+        name="mark_received",
     ),
 ]

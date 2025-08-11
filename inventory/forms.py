@@ -40,12 +40,12 @@ class ConfirmOrderForm(forms.ModelForm):
 
 
 class OrderItemReceivedForm(forms.ModelForm):
-    received_on = forms.DateField()
+    arrived_on = forms.DateField(widget=forms.widgets.DateInput(attrs={"type": "date"}))
 
     class Meta:
         model = OrderItem
-        fields = ["received_on"]
-        
+        fields = ["arrived_on", "location", "serial", "uva_equip"]
+
 
 class NewItemForm(forms.ModelForm):
     name = forms.CharField(label="Item Name")

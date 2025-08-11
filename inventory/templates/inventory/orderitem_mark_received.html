@@ -10,9 +10,9 @@
     <h3 class="panel-title">Mark order item as received</h3>
   </div>
   <div class="panel-body">
-    <form action="{% url 'inventory:mark_orderitem_received' orderitem.id %}" class="form-horizontal" method="post" role="form">
+    <form action="{% url 'inventory:mark_received' orderitem.id %}" class="form-horizontal" method="post" role="form">
       {% csrf_token %}
-      <p>Do you want to mark the item {{orderitem.item}} from order <strong>{{order.name}}</strong> as received?</p>
+      <p>Use this form to mark the item {{orderitem.item}} from order <a href="{{ orderitem.order.get_absolute_url }}">{{ orderitem.order }}</a> as received and to set other properties for the ordered item.</p>
 
       {% for field in form %}
       <div class="form-group {% if field.errors %}has-error{% endif %}">

@@ -12,6 +12,7 @@ from inventory.forms import (
     NewItemForm,
     NewOrderForm,
     NewOrderItemForm,
+    OrderItemReceivedForm,
 )
 from inventory.models import Item, Order, OrderItem
 
@@ -150,12 +151,14 @@ def mark_orderitem_received(request, orderitem_id):
     if request.method == "POST":
         form = OrderItemReceivedForm(request.POST, instance=orderitem)
         if form.is_valid():
-            orderitem.mark_received(form.cleaned_data["received_on"])
-            return redirect("inventory:order", pk=orderitem.order)
+            orderitem.mark_arrived(form.cleaned_data["arrived_on"])
+            return redirect("inventory:order", pk=orderitem.order.id)
     else:
-        form = OrderItemReceived(instance=orderitem)
+        form = OrderItemReceivedForm(instance=orderitem)
     return TemplateResponse(
-        request, "inventory/orderitem_mark_received.html", {"orderitem": orderitem, "form": form}
+        request,
+        "inventory/orderitem_mark_received.html",
+        {"orderitem": orderitem, "form": form},
     )
 
 

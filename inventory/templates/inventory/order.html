@@ -55,7 +55,7 @@
           <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}"
                  class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></a></td>
 	  {% if order.placed_on and not oit.arrived_on %}
-	  <td><a href="asdf" class="glyphicon glyphicon-check" alt="[mark received]" aria-label="Mark Received"></a></td>
+	  <td><a href="{% url 'inventory:mark_received' oit.id %}" class="glyphicon glyphicon-check" alt="[mark received]" aria-label="Mark Received"></a></td>
 	  {% elif not order.placed_on %}
           <td><a href="{% url 'inventory:remove_item_from_order' oit.id %}"
                  class="glyphicon glyphicon-trash" alt="[delete]" aria-label="Delete"></a></td>
