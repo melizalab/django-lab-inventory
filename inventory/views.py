@@ -197,6 +197,27 @@ def item_entry(request):
     return TemplateResponse(request, "inventory/item_entry.html", {"form": form})
 
 
+def item_copy(request, item_id):
+    """Make a copy of an item - populates the form with existing values"""
+    if request.method == "POST":
+        form = NewItemForm(request.POST)
+        if form.is_valid():
+            item = form.save()
+            return redirect("inventory:item", pk=item.id)
+    else:
+        original_item = get_object_or_404(Item, id=item_id)
+        initial_data = {}
+        for field_name in NewItemForm.Meta.fields:
+            if hasattr(original_item, field_name):
+                value = getattr(original_item, field_name)
+                initial_data[field_name] = value
+
+        # Modify the name to indicate it's a copy
+        initial_data["name"] = f"Copy of {original_item.name}"
+        form = NewItemForm(initial=initial_data)
+    return TemplateResponse(request, "inventory/item_entry.html", {"form": form})
+
+
 def order_item_entry(request, item_id):
     if request.method == "POST":
         item = get_object_or_404(Item, id=item_id)

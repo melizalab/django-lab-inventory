@@ -26,6 +26,9 @@ urlpatterns = [
     path("items/new/", login_required(views.item_entry), name="new_item"),
     path("items/<int:pk>/", views.ItemView.as_view(), name="item"),
     path(
+        "items/<int:item_id>/copy/", login_required(views.item_copy), name="copy_item"
+    ),
+    path(
         "items/<int:item_id>/order/",
         login_required(views.order_item_entry),
         name="add_item_to_order",

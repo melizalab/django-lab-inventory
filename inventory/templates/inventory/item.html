@@ -112,6 +112,7 @@
 <hr>
 <a href="{% url 'inventory:items' %}">back to item list</a><br/>
 <a href="{% url 'inventory:new_item' %}">add a new item</a><br/>
+<a href="{% url 'inventory:copy_item' item.id %}">create a copy of this item</a></br>
 <a href="{% url 'admin:inventory_item_change' item.id %}">edit item (advanced users only)</a><br/>
 
 
