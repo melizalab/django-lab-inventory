@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "django-lab-inventory"
 dynamic = ["version"]
 description = "A simple Django app for managing lab inventory"
-readme = "README.md"
+readme = "README.rst"
 requires-python = ">=3.10"
 license = {text = "BSD 3-Clause License"}
 authors = [
