@@ -115,6 +115,7 @@ wheels = [
 
 [[package]]
 name = "django-lab-inventory"
+version = "0.6.0"
 source = { editable = "." }
 dependencies = [
     { name = "django" },
