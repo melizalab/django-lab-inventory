@@ -40,6 +40,6 @@ jobs:
         DJANGO_VERSION: ${{ matrix.django-version }}
       run: |
         uv sync --frozen
-        uv add "Django>${DJANGO_VERSION}"
+        uv add "Django~=${DJANGO_VERSION}"
     - name: Run tests on python ${{ matrix.python-version }}
       run: uv run pytest        
