@@ -27,7 +27,7 @@ jobs:
         env:
           HATCH_BUILD_HOOK_FORCE_VERSION: ${{ env.HATCH_VERSION }}
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: python-package-distributions
           path: dist/
