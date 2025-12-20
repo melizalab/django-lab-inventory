@@ -1,12 +1,19 @@
 {% extends "base_view.html" %}
 {% load widget_tweaks %}
 
-{% block title %} meliza-lab : order : {{ order.name }} {% endblock %}
+{% block title %} University Laboratory Checkout System : Order : {{ order.name }} {% endblock %}
 
 {% block content %}
 
-<h2>order: {{ order.name }}</h2>
-<hr>
+<h2>Order: {{ order.name }}
+  {% if order.placed_on %}
+    <span class="badge badge-success" title="Order placed on {{ order.placed_on }}">Placed</span>
+  {% else %}
+    <span class="badge badge-warning" title="Order is in progress">In Progress</span>
+  {% endif %}
+</h2>
+
+<p class="hero-desc">Overview and current status for this purchase order.</p>
 
 <dl class="dl-horizontal">
   <dt>created on</dt><dd>{{ order.created_at.date }}</dd>
@@ -16,7 +23,7 @@
   <dt>total cost</dt><dd>{{ order.total_cost }}</dd>
 </dl>
 
-<h3>items</h3>
+<h3>Items</h3>
 
 <table class="table table-striped table-condensed">
   <thead>
@@ -52,13 +59,11 @@
 	  {% if order.placed_on %}
 	  <td>{{ oit.arrived_on|default:"no" }}</td>
 	  {% endif %}
-          <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}"
-                 class="glyphicon glyphicon-edit" alt="[edit]" aria-label="Edit"></a></td>
+             <td><a href="{% url 'admin:inventory_orderitem_change' oit.id %}" class="btn" aria-label="Edit"><span class="glyphicon glyphicon-edit"></span></a></td>
 	  {% if order.placed_on and not oit.arrived_on %}
-	  <td><a href="{% url 'inventory:mark_received' oit.id %}" class="glyphicon glyphicon-check" alt="[mark received]" aria-label="Mark Received"></a></td>
+          <td><a href="{% url 'inventory:mark_received' oit.id %}" class="btn" aria-label="Mark Received"><span class="glyphicon glyphicon-check"></span></a></td>
 	  {% elif not order.placed_on %}
-          <td><a href="{% url 'inventory:remove_item_from_order' oit.id %}"
-                 class="glyphicon glyphicon-trash" alt="[delete]" aria-label="Delete"></a></td>
+             <td><a href="{% url 'inventory:remove_item_from_order' oit.id %}" class="btn btn-danger" aria-label="Delete"><span class="glyphicon glyphicon-trash"></span></a></td>
 	  {% else %}
 	  <td></td>
 	  {% endif %}
@@ -70,9 +75,14 @@
 
 <hr>
 
-<p>To update information about an item after it has been received, click the <span class="glyphicon glyphicon-edit" alt="[edit]".  aria-label="Edit"></span> icon. {% if not order.placed_on %} To add items to this order, search the <a href="{% url 'inventory:items' %}">items list</a> or <a href="{% url 'inventory:new_item' %}">add a new item</a>. To remove an item from the order, click the <span class="glyphicon glyphicon-trash" alt="[delete]" aria-label="Delete"></span> icon. {% else %} To mark an item as received, click the <span class="glyphicon glyphicon-check" alt="[mark received]" aria-label="Mark Received"></span> icon. {% endif %} </p>
-<a href="{% url 'inventory:orders' %}">back to order list</a><br/>
-{% if not order.placed_on %}<a href="{% url 'inventory:mark_order_placed' order.id %}">mark this order as placed</a><br/>{% endif %}
-<a href="{% url 'admin:inventory_order_change' order.id %}">edit order (advanced users only)</a><br/>
+<p>Use the action icons to edit line items, mark received, or remove items as needed. {% if not order.placed_on %} To add items to this order, search the <a href="{% url 'inventory:items' %}">items list</a> or <a href="{% url 'inventory:new_item' %}">add a new item</a>. {% endif %}</p>
+
+<div style="margin-top:12px"></div>
+
+<a href="{% url 'inventory:orders' %}" class="btn">← Back to Orders</a>
+{% if not order.placed_on %}
+  <a href="{% url 'inventory:mark_order_placed' order.id %}" class="btn btn-primary">Mark Order as Placed</a>
+{% endif %}
+<a href="{% url 'admin:inventory_order_change' order.id %}" class="btn">Edit in Admin</a>
 
 {% endblock %}

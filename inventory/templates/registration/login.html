@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - University Laboratory Checkout System</title>
+    <link rel="icon" href="{% static 'inventory/favicon.svg' %}" type="image/svg+xml">
+    <link rel="stylesheet" href="{% static 'inventory/styles.css' %}">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 480px;
+        }
+        .login-card {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-elevated) 100%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            padding: 48px;
+            margin-bottom: 24px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .login-logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+        .login-title {
+            font-size: 1.875rem;
+            font-weight: 800;
+            margin: 0 0 8px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        .login-form .form-group {
+            display: block;
+            margin-bottom: 24px;
+        }
+        .login-form label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        .login-form input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        .login-form .btn-login {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger-light);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .error-icon {
+            font-size: 20px;
+        }
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 13px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            margin-top: 24px;
+        }
+        .security-badge svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--success);
+        }
+        .footer-text {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 24px;
+        }
+        .password-requirements {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 24px;
+            font-size: 13px;
+        }
+        .password-requirements h4 {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0 0 12px;
+        }
+        .password-requirements ul {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--text-muted);
+        }
+        .password-requirements li {
+            margin: 6px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">🔬</div>
+                <h1 class="login-title">Welcome Back</h1>
+                <p class="login-subtitle">Sign in to University Laboratory Checkout System</p>
+            </div>
+
+            {% if form.errors %}
+            <div class="error-message">
+                <span class="error-icon">⚠️</span>
+                <div>
+                    {% if form.non_field_errors %}
+                        {{ form.non_field_errors.0 }}
+                    {% else %}
+                        Invalid username or password. Please try again.
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}" class="login-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="id_username">Username</label>
+                    <input type="text" 
+                           name="username" 
+                           id="id_username" 
+                           autocomplete="username"
+                           required 
+                           autofocus
+                           placeholder="Enter your username"
+                           value="{{ form.username.value|default:'' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password">Password</label>
+                    <input type="password" 
+                           name="password" 
+                           id="id_password"
+                           autocomplete="current-password"
+                           required
+                           placeholder="Enter your password">
+                </div>
+
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <button type="submit" class="btn btn-primary btn-login">
+                    🔐 Sign In Securely
+                </button>
+
+                <div class="security-badge">
+                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 2L3 6v4c0 4.42 3 8.5 7 10 4-1.5 7-5.58 7-10V6l-7-4zm0 14c-3.31-1.28-5-4.38-5-7V7.5l5-2.5 5 2.5V9c0 2.62-1.69 5.72-5 7z"/>
+                        <path d="M8 10l-1.41-1.41L5 10.17l3 3 6-6-1.41-1.41L8 10z"/>
+                    </svg>
+                    Protected by enterprise-grade security
+                </div>
+            </form>
+        </div>
+
+        <div class="password-requirements">
+            <h4>🛡️ Security Requirements</h4>
+            <ul>
+                <li>All connections are encrypted with TLS/SSL</li>
+                <li>Passwords are hashed with industry-standard algorithms</li>
+                <li>Account lockout after multiple failed attempts</li>
+                <li>Session expires after inactivity</li>
+                <li>CSRF protection enabled on all forms</li>
+            </ul>
+        </div>
+
+        <p class="footer-text">© 2025 University Laboratory Checkout System. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Add subtle animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.querySelector('.login-card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

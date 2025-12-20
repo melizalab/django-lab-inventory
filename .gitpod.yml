@@ -1,0 +1,50 @@
+image: gitpod/workspace-postgres
+
+tasks:
+  - name: Setup Database
+    init: |
+      # Wait for PostgreSQL to be ready
+      sleep 5
+      
+  - name: Install Dependencies
+    init: |
+      pip install -e .
+      pip install argon2-cffi psycopg2-binary
+      
+  - name: Run Migrations
+    init: |
+      python -m django migrate --settings=inventory.tests.settings
+      
+  - name: Create Superuser
+    command: |
+      echo "Creating superuser..."
+      python -m django shell --settings=inventory.tests.settings << EOF
+from django.contrib.auth import get_user_model
+User = get_user_model()
+if not User.objects.filter(username='admin').exists():
+    User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+    print('✓ Superuser created: admin / admin123')
+else:
+    print('✓ Superuser already exists')
+EOF
+      echo ""
+      echo "========================================="
+      echo "🚀 Starting Django Lab Inventory..."
+      echo "========================================="
+      echo "Login credentials:"
+      echo "  Username: admin"
+      echo "  Password: admin123"
+      echo "========================================="
+      echo ""
+      python -m django runserver 0.0.0.0:8003 --settings=inventory.tests.settings
+
+ports:
+  - port: 8003
+    onOpen: open-browser
+    visibility: public
+    description: Django Lab Inventory
+
+vscode:
+  extensions:
+    - ms-python.python
+    - ms-python.vscode-pylance

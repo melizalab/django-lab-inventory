@@ -1,23 +1,82 @@
 {% extends "base_view.html" %}
 
-{% block title %} meliza-lab : inventory {% endblock %}
+{% block title %} University Laboratory Checkout System {% endblock %}
 
 {% block content %}
 
-<p>This web application allows you to interact with the inventory database. The database contains records of <a href="{% url 'inventory:items' %}">items</a>, which are specific things or services sold by <a href="">vendors</a>. Items are associated with <a href="{% url 'inventory:orders' %}">orders</a></li>, which are requests by an individual to make a purchase using funds from an <a href="">account</a>.
+<section class="hero">
+  <h1 class="hero-title">University Laboratory Checkout System</h1>
+  <p class="hero-desc">Track items, manage purchase orders, and keep a clear record of what’s in the lab.</p>
+  <div class="actions">
+    <a class="action" href="{% url 'inventory:new_order' %}">➕ Create New Order</a>
+    <a class="action" href="{% url 'inventory:items' %}">🔎 Browse &amp; Search Items</a>
+    <a class="action" href="{% url 'inventory:orders' %}">📦 View All Orders</a>
+  </div>
+</section>
 
-<ul>
-  <li><a href="{% url 'inventory:unplaced-orders' %}">unplaced (in progress) orders</a></li>
-  <li><a href="{% url 'inventory:unplaced-orders' %}">placed orders with unreceived items</a></li>
-  <li><a href="{% url 'inventory:orders' %}">all orders</a></li>
-</ul>
+<div style="height: 12px"></div>
 
-<p>To order something, you create an order and assign items to it. When an item is added to an order, you enter per-order information like price and quantity. If an item doesn't exist in the database, you'll need to create it and then add it to the order. </p>
+<div class="card card-pad">
+  <h2>Quick Links</h2>
+  <ul>
+    <li><a href="{% url 'inventory:unplaced-orders' %}">Unplaced (in-progress) orders</a></li>
+    <li><a href="{% url 'inventory:incomplete-orders' %}">Placed orders with unreceived items</a></li>
+    <li><a href="{% url 'inventory:orders' %}">All orders</a></li>
+  </ul>
 
-<ul>
-  <li><a href="{% url 'inventory:new_order' %}">create a new order</a></li>
-  <li><a href="{% url 'inventory:items' %}">list and search items</a></li>
-  <li><a href="{% url 'inventory:new_item' %}">add a new item</a></li>
-</ul>
+  <p>To order something, create an order and assign items to it. When an item is added to an order, enter per-order details like price and quantity. If an item doesn't exist yet, create it first, then add it to the order.</p>
+
+  {% if stats %}
+  <div class="stats">
+    <div class="stat"><h3>Items</h3><div class="num">{{ stats.item_count }}</div></div>
+    <div class="stat"><h3>Orders</h3><div class="num">{{ stats.order_count }}</div></div>
+    <div class="stat"><h3>Unplaced</h3><div class="num">{{ stats.unplaced_count }}</div></div>
+    <div class="stat"><h3>Incomplete</h3><div class="num">{{ stats.incomplete_count }}</div></div>
+  </div>
+  {% endif %}
+
+  <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+    <div>
+      <h3>Recent Orders</h3>
+      <table class="table table-condensed">
+        <thead>
+          <tr><th>Name</th><th>Placed On</th><th>Items</th><th>Received</th></tr>
+        </thead>
+        <tbody>
+          {% for o in recent_orders %}
+          <tr>
+            <td><a href="{{ o.get_absolute_url }}">{{ o.name }}</a> {% if o.placed_on %}<span class="badge badge-success">Placed</span>{% else %}<span class="badge badge-warning">In Progress</span>{% endif %}</td>
+            <td>{{ o.placed_on|default:"—" }}</td>
+            <td>{{ o.item_count }}</td>
+            <td>{{ o.item_received_count }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4">No recent orders.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Recent Items</h3>
+      <table class="table table-condensed">
+        <thead>
+          <tr><th>Name</th><th>Vendor</th><th>Catalog</th><th>Category</th></tr>
+        </thead>
+        <tbody>
+          {% for i in recent_items %}
+          <tr>
+            <td><a href="{{ i.get_absolute_url }}">{{ i.name }}</a></td>
+            <td>{{ i.vendor }}</td>
+            <td>{{ i.catalog|default:"" }}</td>
+            <td>{{ i.category }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4">No recent items.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

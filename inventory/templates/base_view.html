@@ -1,16 +1,32 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} {% endblock %}</title>
+    <title>{% block title %}University Laboratory Checkout System{% endblock %}</title>
+    <link rel="icon" href="{% static 'inventory/favicon.svg' %}" type="image/svg+xml">
+    <link rel="stylesheet" href="{% static 'inventory/styles.css' %}">
 </head>
 <body>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-    <footer>
-        <p>© 2025 Django Lab Inventory</p>
-    </footer>
+    <header class="header">
+        <nav class="nav">
+            <a class="brand" href="/">University Laboratory Checkout System</a>
+            <a href="{% url 'inventory:index' %}">Home</a>
+            <a href="{% url 'inventory:orders' %}">Orders</a>
+            <a href="{% url 'inventory:items' %}">Items</a>
+            <span class="spacer"></span>
+            <a href="{% url 'admin:index' %}">Admin</a>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="card card-pad">
+            {% block content %}{% endblock %}
+        </div>
+        <footer>
+            <p>© 2025 University Laboratory Checkout System</p>
+        </footer>
+    </div>
+    <script src="{% static 'inventory/app.js' %}"></script>
 </body>
 </html>

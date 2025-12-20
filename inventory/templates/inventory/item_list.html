@@ -1,7 +1,7 @@
 {% extends "base_view.html" %}
 {% load widget_tweaks %}
 
-{% block title %} meliza-lab : items {% endblock %}
+{% block title %} University Laboratory Checkout System : Items {% endblock %}
 
 {% block content %}
 <h2>Items</h2>
@@ -52,6 +52,8 @@
           </td>
           <td>{{ item.category }}</td>
         </tr>
+    {% empty %}
+        <tr><td colspan="7">No items found. Try adjusting filters or <a href="{% url 'inventory:new_item' %}">add a new item</a>.</td></tr>
     {% endfor %}
   </tbody>
 </table>
@@ -72,7 +74,7 @@
     </span>
 </div>
 
-<p><a href="{% url 'inventory:new_item' %}">add a new item</a></p>
+<p><a class="btn btn-primary" href="{% url 'inventory:new_item' %}">Add New Item</a></p>
 
 {% endblock %}
 

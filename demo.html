@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Lab Inventory - Try Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #2d3748;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .option {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        
+        .option h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .option p {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .badge.free {
+            background: #48bb78;
+        }
+        
+        .badge.instant {
+            background: #ed8936;
+        }
+        
+        .info {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .info h4 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info li {
+            color: #4a5568;
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .info li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 Django Lab Inventory</h1>
+        <p class="subtitle">Try the complete system in your browser - no installation required!</p>
+        
+        <div class="options">
+            <div class="option">
+                <span class="badge free">FREE</span>
+                <h3>GitHub Codespaces</h3>
+                <p>Full development environment in the cloud</p>
+                <a href="https://github.com/melizalab/django-lab-inventory" class="btn">Open in Codespaces</a>
+            </div>
+            
+            <div class="option">
+                <span class="badge instant">INSTANT</span>
+                <h3>Play with Docker</h3>
+                <p>Test immediately, no account needed</p>
+                <a href="https://labs.play-with-docker.com/" class="btn">Launch Demo</a>
+            </div>
+            
+            <div class="option">
+                <span class="badge free">FREE</span>
+                <h3>Gitpod</h3>
+                <p>Cloud IDE with automatic setup</p>
+                <a href="https://gitpod.io/#https://github.com/melizalab/django-lab-inventory" class="btn">Open in Gitpod</a>
+            </div>
+        </div>
+        
+        <div class="info">
+            <h4>What You'll Get:</h4>
+            <ul>
+                <li>Complete laboratory inventory management system</li>
+                <li>Pre-configured database with PostgreSQL</li>
+                <li>Admin account (username: admin, password: admin123)</li>
+                <li>Beautiful, responsive user interface</li>
+                <li>Order tracking and item management</li>
+                <li>Enterprise-grade security features</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; color: #718096;">
+            <p>⏱️ Setup time: 1-2 minutes | 🌐 Runs entirely in your browser</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -6,6 +6,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views import generic
 from django_filters.views import FilterView
+from django.contrib.auth.signals import user_logged_in
+from django.dispatch import receiver
 
 from inventory.forms import (
     ConfirmOrderForm,
@@ -17,8 +19,28 @@ from inventory.forms import (
 from inventory.models import Item, Order, OrderItem
 
 
+@receiver(user_logged_in)
+def clear_login_attempts(sender, request, user, **kwargs):
+    """Clear failed login attempts on successful login"""
+    from inventory.middleware import LoginAttemptMiddleware
+    ip_address = request.META.get('REMOTE_ADDR')
+    LoginAttemptMiddleware.clear_attempts(ip_address, user.username)
+
+
 def index(request):
-    return TemplateResponse(request, "inventory/index.html")
+    stats = {
+        "item_count": Item.objects.count(),
+        "order_count": Order.objects.count(),
+        "unplaced_count": Order.objects.not_placed().count(),
+        "incomplete_count": Order.objects.not_completed().count(),
+    }
+    recent_orders = Order.objects.with_counts().order_by("-created_at")[:5]
+    recent_items = Item.objects.order_by("-created_at")[:5]
+    return TemplateResponse(
+        request,
+        "inventory/index.html",
+        {"stats": stats, "recent_orders": recent_orders, "recent_items": recent_items},
+    )
 
 
 class PaginatedFilterView(FilterView):

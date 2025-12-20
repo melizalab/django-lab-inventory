@@ -1,7 +1,7 @@
 {% extends "base_view.html" %}
 {% load widget_tweaks %}
 
-{% block title %} meliza-lab : orders {% endblock %}
+{% block title %} University Laboratory Checkout System : Orders {% endblock %}
 
 {% block content %}
 <h2>Orders</h2>
@@ -31,13 +31,15 @@
   <tbody>
     {% for order in order_list %}
         <tr>
-          <td><a href="{{ order.get_absolute_url }}">{{ order.name }}</a></td>
+          <td><a href="{{ order.get_absolute_url }}">{{ order.name }}</a> {% if order.placed_on %}<span class="badge badge-success">Placed</span>{% else %}<span class="badge badge-warning">In Progress</span>{% endif %}</td>
 	  <td>{{ order.placed_on|default_if_none:"—" }}</td>
           <td>{{ order.item_count }}</td>
           <td>{{ order.item_received_count }}</td>
 	  <td>{{ order.requested_by.get_full_name }}</td>
           <td>{{ order.account_codes }}</td>
         </tr>
+    {% empty %}
+        <tr><td colspan="6">No orders found. Try adjusting filters or <a href="{% url 'inventory:new_order' %}">create a new order</a>.</td></tr>
     {% endfor %}
   </tbody>
 </table>
@@ -58,7 +60,7 @@
     </span>
 </div>
 
-<p><a href="{% url 'inventory:new_order' %}">add a new order</a></p>
+<p><a class="btn btn-primary" href="{% url 'inventory:new_order' %}">Create New Order</a></p>
 
 {% endblock %}
 
