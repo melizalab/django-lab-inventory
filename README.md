@@ -144,7 +144,7 @@ BSD 3-Clause. See [COPYING](COPYING).
 
 ## Support
 
-Open an issue or PR at the repository: https://github.com/melizalab/django-lab-inventory
+Open an issue or PR at the repository: https://github.com/beginnertodesign/django-lab-inventory
 
 <div align="center">
 
