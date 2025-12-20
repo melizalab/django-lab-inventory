@@ -4,8 +4,7 @@ docker run -it --rm \
 <div align="center">
 
 [![Project Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Version](https://img.shields.io/pypi/v/django-lab-inventory.svg)](https://pypi.python.org/pypi/django-lab-inventory/)
-[![Build Status](https://github.com/melizalab/django-lab-inventory/actions/workflows/tests.yml/badge.svg)](https://github.com/melizalab/django-lab-inventory/actions/workflows/tests.yml)
+[![Build Status](https://github.com/beginnertodesign/django-lab-inventory/actions/workflows/tests.yml/badge.svg)](https://github.com/beginnertodesign/django-lab-inventory/actions/workflows/tests.yml)
 [![License](https://img.shields.io/pypi/l/django-lab-inventory.svg)](https://opensource.org/license/bsd-3-clause/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/django-lab-inventory.svg)](https://pypi.python.org/pypi/django-lab-inventory/)
 
@@ -27,7 +26,7 @@ docker run -it --rm \
 The fastest way to run locally.
 
 ```bash
-git clone https://github.com/melizalab/django-lab-inventory.git
+git clone https://github.com/beginnertodesign/django-lab-inventory.git
 cd django-lab-inventory
 docker-compose up --build
 ```
@@ -50,7 +49,7 @@ docker-compose restart web   # restart after code changes
 1) Install dependencies
 
 ```bash
-git clone https://github.com/melizalab/django-lab-inventory.git
+git clone https://github.com/beginnertodesign/django-lab-inventory.git
 cd django-lab-inventory
 pip install -e .
 
