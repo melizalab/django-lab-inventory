@@ -24,6 +24,7 @@ urlpatterns = [
         name="mark_order_placed",
     ),
     path("items/", views.ItemList.as_view(), name="items"),
+    path("items/export/", login_required(views.export_items_csv), name="export_items_csv"),
     path("items/new/", login_required(views.item_entry), name="new_item"),
     path("items/<int:pk>/", views.ItemView.as_view(), name="item"),
     path(
