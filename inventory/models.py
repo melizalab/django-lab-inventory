@@ -291,6 +291,37 @@ class OrderItem(models.Model):
         db_table = "inventory_order_items"
 
 
+from django.conf import settings
+from django.db import models
+from django.urls import reverse
+import uuid
+
+class StockItem(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    sku = models.CharField(max_length=100, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    qr_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_qr_url(self):
+        return reverse('inventory:quick_checkout', args=[str(self.qr_token)])
+
+class CheckoutRecord(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    STATUS_CHOICES = [('out','Out'),('returned','Returned')]
+    item = models.ForeignKey(StockItem, on_delete=models.CASCADE, related_name='checkout_records')
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='checkouts')
+    checked_out_at = models.DateTimeField(auto_now_add=True)
+    due_date = models.DateTimeField()
+    returned_at = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='out')
+
+    def __str__(self):
+        return f'{self.item} - {self.student} ({self.status})'
+
 class OrderAccount(models.Model):
     """
     Through model for Order-Account relationship.

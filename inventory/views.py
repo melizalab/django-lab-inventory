@@ -9,6 +9,25 @@ from django_filters.views import FilterView
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 
+from django.shortcuts import get_object_or_404, render
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from .models import StockItem, CheckoutRecord
+
+@login_required
+def quick_checkout(request, token):
+    item = get_object_or_404(StockItem, qr_token=token)
+    if request.method == 'POST':
+        try:
+            due_days = int(request.POST.get('due_days', 7))
+        except (ValueError, TypeError):
+            due_days = 7
+        due_date = timezone.now() + timezone.timedelta(days=due_days)
+        co = CheckoutRecord.objects.create(item=item, student=request.user, due_date=due_date, status='out')
+        return render(request, 'inventory/quick_checkout_success.html', {'checkout': co})
+    return render(request, 'inventory/quick_checkout.html', {'item': item})
+
+
 from inventory.forms import (
     ConfirmOrderForm,
     NewItemForm,
@@ -33,13 +52,24 @@ def index(request):
         "order_count": Order.objects.count(),
         "unplaced_count": Order.objects.not_placed().count(),
         "incomplete_count": Order.objects.not_completed().count(),
+        "stock_item_count": StockItem.objects.count(),
+        "active_checkouts": CheckoutRecord.objects.filter(status='out').count(),
     }
     recent_orders = Order.objects.with_counts().order_by("-created_at")[:5]
     recent_items = Item.objects.order_by("-created_at")[:5]
+    recent_stock_items = StockItem.objects.all()[:6]
+    recent_checkouts = CheckoutRecord.objects.select_related('item', 'student').order_by("-checked_out_at")[:5]
+    
     return TemplateResponse(
         request,
         "inventory/index.html",
-        {"stats": stats, "recent_orders": recent_orders, "recent_items": recent_items},
+        {
+            "stats": stats, 
+            "recent_orders": recent_orders, 
+            "recent_items": recent_items,
+            "recent_stock_items": recent_stock_items,
+            "recent_checkouts": recent_checkouts,
+        },
     )
 
 

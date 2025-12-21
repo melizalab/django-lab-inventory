@@ -12,6 +12,30 @@ from inventory.models import (
     Vendor,
 )
 
+from django.contrib import admin
+from .models import StockItem, CheckoutRecord
+from django.utils.html import format_html
+import qrcode, io, base64
+
+@admin.register(StockItem)
+class StockItemAdmin(admin.ModelAdmin):
+    list_display = ('name','sku','qr_token','qr_image')
+    readonly_fields = ('qr_token','qr_image')
+
+    def qr_image(self, obj):
+        if not obj or not obj.qr_token:
+            return ''
+        qr = qrcode.make(str(obj.qr_token))
+        buf = io.BytesIO(); qr.save(buf, format='PNG')
+        data = base64.b64encode(buf.getvalue()).decode('ascii')
+        return format_html('<img src="data:image/png;base64,{}" width="120" />', data)
+    qr_image.short_description = 'QR'
+
+@admin.register(CheckoutRecord)
+class CheckoutRecordAdmin(admin.ModelAdmin):
+    list_display = ('item','student','status','checked_out_at','due_date','returned_at')
+    list_filter = ('status',)
+
 
 class OrderItemInline(admin.StackedInline):
     model = OrderItem
