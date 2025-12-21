@@ -242,7 +242,9 @@ EOF
 - Search and filtering with django-filter
 - Secure auth (Argon2 hashing, CSRF, session timeout, lockout)
 
-### 🎯 NEW: QR-Assisted Quick Checkout
+### ✨ New Features
+
+#### 1️⃣ QR-Assisted Quick Checkout 🎯
 
 Streamline your laboratory equipment checkout process with QR code technology. Students and researchers can now checkout items instantly by scanning QR codes—no manual data entry required.
 
