@@ -2,11 +2,12 @@
 # -*- mode: python -*-
 from django.contrib.auth.decorators import login_required
 from django.urls import path
-
+from . import views
 from inventory import views
 
 app_name = "inventory"
 urlpatterns = [
+    path('quick-checkout/<uuid:token>/', views.quick_checkout, name='quick_checkout'),
     path("", views.index, name="index"),
     path("orders/", views.OrderList.as_view(), name="orders"),
     path("orders/unplaced/", views.UnplacedOrderList.as_view(), name="unplaced-orders"),

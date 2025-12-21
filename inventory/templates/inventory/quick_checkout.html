@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Quick Checkout</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; padding: 24px; }
+    .card { max-width: 640px; margin: 0 auto; border: 1px solid #e1e1e1; padding: 18px; border-radius: 8px; }
+    label { display:block; margin: 12px 0 6px; }
+    input[type="number"] { width: 80px; padding:6px; }
+    button { margin-top: 12px; padding: 8px 14px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Quick Checkout</h1>
+    <p><strong>Item:</strong> {{ item.name }}</p>
+    {% if item.sku %}<p><strong>SKU:</strong> {{ item.sku }}</p>{% endif %}
+    <form method="post">{% csrf_token %}
+      <label for="due_days">Due in (days)</label>
+      <input id="due_days" name="due_days" type="number" value="7" min="1" />
+      <div>
+        <button type="submit">Checkout</button>
+      </div>
+    </form>
+    <p style="margin-top:12px; font-size:0.9em; color:#555;">
+      You must be logged in to checkout. If you are not logged in you will be redirected to the login page.
+    </p>
+  </div>
+</body>
+</html>

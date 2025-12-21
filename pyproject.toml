@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "django-lab-inventory"
 version = "0.6.0"
 description = "A simple Django app for managing lab inventory"
-readme = "README.rst"
+readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "BSD 3-Clause License"}
 authors = [
@@ -32,6 +32,8 @@ dependencies = [
     "django>=4.2.17",
     "django-filter>=22.1",
     "django-widget-tweaks>=1.4.12",
+    "qrcode>=7.4.2",
+    "Pillow>=10.0.0",
 ]
 
 [project.urls]
@@ -79,6 +81,6 @@ dev = [
 [tool.hatch.build]
 include = ["inventory/**"]
 exclude = ["*test*"]
-artifacts = ["README.rst"]
+artifacts = ["README.md"]
 
 

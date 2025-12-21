@@ -11,6 +11,7 @@
     <a class="action" href="{% url 'inventory:new_order' %}">➕ Create New Order</a>
     <a class="action" href="{% url 'inventory:items' %}">🔎 Browse &amp; Search Items</a>
     <a class="action" href="{% url 'inventory:orders' %}">📦 View All Orders</a>
+    <a class="action" href="{% url 'admin:inventory_stockitem_changelist' %}">📱 QR Stock Items</a>
   </div>
 </section>
 
@@ -32,6 +33,8 @@
     <div class="stat"><h3>Orders</h3><div class="num">{{ stats.order_count }}</div></div>
     <div class="stat"><h3>Unplaced</h3><div class="num">{{ stats.unplaced_count }}</div></div>
     <div class="stat"><h3>Incomplete</h3><div class="num">{{ stats.incomplete_count }}</div></div>
+    <div class="stat"><h3>QR Items</h3><div class="num">{{ stats.stock_item_count }}</div></div>
+    <div class="stat"><h3>Active Checkouts</h3><div class="num">{{ stats.active_checkouts }}</div></div>
   </div>
   {% endif %}
 
@@ -75,6 +78,67 @@
           {% endfor %}
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div style="margin-top: 24px; padding: 16px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">
+    <h3 style="margin-top: 0;">📱 QR Quick Checkout</h3>
+    <p style="color: #555;">Scan QR codes on lab equipment to quickly check out items. Each item has a unique QR code that links to a fast checkout page.</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+      <div>
+        <h4 style="margin-bottom: 8px;">Available Stock Items</h4>
+        {% if recent_stock_items %}
+        <div style="display: grid; gap: 8px;">
+          {% for item in recent_stock_items %}
+          <div style="padding: 8px; background: white; border: 1px solid #ddd; border-radius: 4px;">
+            <strong>{{ item.name }}</strong>
+            {% if item.sku %}<br><small style="color: #666;">SKU: {{ item.sku }}</small>{% endif %}
+            <br>
+            <a href="{% url 'admin:inventory_stockitem_change' item.pk %}" style="font-size: 0.85em;">View QR Code</a>
+            <a href="/quick-checkout/{{ item.qr_token }}/" style="font-size: 0.85em; margin-left: 8px;">Quick Checkout</a>
+          </div>
+          {% endfor %}
+        </div>
+        <div style="margin-top: 12px;">
+          <a href="{% url 'admin:inventory_stockitem_changelist' %}" class="btn btn-sm">View All Stock Items →</a>
+        </div>
+        {% else %}
+        <p style="color: #999;">No stock items yet. <a href="{% url 'admin:inventory_stockitem_add' %}">Add your first item</a></p>
+        {% endif %}
+      </div>
+
+      <div>
+        <h4 style="margin-bottom: 8px;">Recent Checkouts</h4>
+        {% if recent_checkouts %}
+        <table class="table table-condensed" style="font-size: 0.9em;">
+          <thead>
+            <tr><th>Item</th><th>Student</th><th>Due Date</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            {% for co in recent_checkouts %}
+            <tr>
+              <td>{{ co.item.name }}</td>
+              <td>{{ co.student.username }}</td>
+              <td>{{ co.due_date|date:"M d" }}</td>
+              <td>
+                {% if co.status == 'out' %}
+                <span class="badge badge-warning">Out</span>
+                {% else %}
+                <span class="badge badge-success">Returned</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div style="margin-top: 8px;">
+          <a href="{% url 'admin:inventory_checkoutrecord_changelist' %}" class="btn btn-sm">View All Checkouts →</a>
+        </div>
+        {% else %}
+        <p style="color: #999;">No checkouts yet.</p>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>

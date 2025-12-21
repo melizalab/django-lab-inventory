@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Checkout Successful</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; padding: 24px; }
+    .card { max-width: 640px; margin: 0 auto; border: 1px solid #e1e1e1; padding: 18px; border-radius: 8px; }
+    .meta { color:#333; margin:8px 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Checkout successful</h1>
+    <p class="meta"><strong>Item:</strong> {{ checkout.item }}</p>
+    <p class="meta"><strong>Student:</strong> {{ checkout.student }}</p>
+    <p class="meta"><strong>Checked out at:</strong> {{ checkout.checked_out_at }}</p>
+    <p class="meta"><strong>Due date:</strong> {{ checkout.due_date }}</p>
+    <p class="meta"><strong>Status:</strong> {{ checkout.status }}</p>
+    <p style="margin-top:14px;">
+      <a href="{% url 'admin:index' %}">Open admin</a> · <a href="/">Return to site</a>
+    </p>
+  </div>
+</body>
+</html>
