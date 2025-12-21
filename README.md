@@ -333,10 +333,7 @@ How It Works
 ```mermaid
 graph LR
   F[Filter/Search Items] --> B[Click Export CSV]
-  B --> A[Auth Check (login_required)]
-  A --> G[Generate CSV from filtered queryset]
-  G --> D[Download inventory_items.csv]
-```
+    B --> A["Auth Check (login_required)"]
 
 The flow matches the standard UI interactions: apply filters, click export, and get a CSV download.
 
