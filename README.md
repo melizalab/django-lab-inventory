@@ -324,6 +324,72 @@ graph LR
 | 📍 Real-time Tracking | Live status updates | Always know item locations |
 
 ---
+### ✨ Feature #2: Export Items as CSV
+
+A convenient, authenticated CSV export for the `Item` list. The export respects any search and filter parameters on the Items page so you can download exactly the subset you see in the UI.
+
+How It Works
+
+```mermaid
+graph LR
+  F[Filter/Search Items] --> B[Click Export CSV]
+  B --> A[Auth Check (login_required)]
+  A --> G[Generate CSV from filtered queryset]
+  G --> D[Download inventory_items.csv]
+```
+
+The flow matches the standard UI interactions: apply filters, click export, and get a CSV download.
+
+The Problem We Solved
+
+| Problem | Solution |
+|---------|---------|
+| Hard to extract item lists for reporting | One-click CSV download of the currently filtered items |
+| Manual copy/paste from the UI | CSV ready for spreadsheets / scripts |
+| Risk of exporting entire dataset by mistake | Export reflects the visible subset (filters applied) |
+
+Technical Implementation
+
+<details>
+<summary><b>🔧 Implementation Details</b></summary>
+
+- **View**: `inventory/views.py` — `export_items_csv(request)` (protected by `login_required`).
+- **URL**: `GET /inventory/items/export/` added to `inventory/urls.py` as `inventory:export_items_csv`.
+- **Filtering**: Uses `ItemFilter` (same filter as list view) to apply request GET parameters to the queryset.
+- **CSV**: Generated with Python's `csv.writer`; headers: Description, Unit, Vendor, Catalog number, Manufacturer, Part Number, Category.
+- **No model changes** required.
+
+</details>
+
+Key Benefits
+
+| Feature | Description | Impact |
+|---------|-------------|--------|
+| ✅ Accurate exports | Respects current filters | Less manual data cleaning |
+| 🧾 Ready for analysis | CSV importable to Excel/Sheets | Faster reporting |
+| 🔒 Secure | Requires login | Prevents unauthenticated exports |
+
+How to use
+
+1. Open the Items page: `/inventory/items/`
+2. Use the search/filter form to narrow results (optional)
+3. Click the `Export CSV` button to download `inventory_items.csv`
+
+Developer / Testing
+
+- Endpoint: `GET /inventory/items/export/` (login required)
+- Unit test added: `inventory/tests/test_views.py::test_export_items_csv_requires_login_and_returns_csv`
+- To run the test:
+
+```bash
+pip install -r requirements-dev.txt
+export DJANGO_SETTINGS_MODULE=inventory.tests.settings
+pytest inventory/tests/test_views.py::test_export_items_csv_requires_login_and_returns_csv -q
+```
+
+If you prefer a shorter README or want this documented elsewhere, tell me and I will adjust.
+
+---
 
 ## 🧪 Testing
 

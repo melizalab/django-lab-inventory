@@ -74,7 +74,10 @@
     </span>
 </div>
 
-<p><a class="btn btn-primary" href="{% url 'inventory:new_item' %}">Add New Item</a></p>
+<p>
+  <a class="btn btn-default" href="{% url 'inventory:export_items_csv' %}{% if query %}?{{ query.urlencode }}{% endif %}">Export CSV</a>
+  <a class="btn btn-primary" href="{% url 'inventory:new_item' %}">Add New Item</a>
+</p>
 
 {% endblock %}
 

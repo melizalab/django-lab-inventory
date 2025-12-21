@@ -13,6 +13,8 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import StockItem, CheckoutRecord
+from django.http import HttpResponse
+import csv
 
 @login_required
 def quick_checkout(request, token):
@@ -223,6 +225,41 @@ class ItemList(PaginatedFilterView):
     def get_queryset(self):
         qs = Item.objects.filter(**self.kwargs)
         return qs.order_by("-created_at")
+
+
+@login_required
+def export_items_csv(request):
+    """Export items as CSV. Respects the same filter query params as the list view."""
+    # Apply the same filters as ItemList so users can export filtered results
+    f = ItemFilter(request.GET, queryset=Item.objects.all())
+    qs = f.qs.order_by("-created_at")
+
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="inventory_items.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        "Description",
+        "Unit",
+        "Vendor",
+        "Catalog number",
+        "Manufacturer",
+        "Part Number",
+        "Category",
+    ])
+
+    for item in qs:
+        writer.writerow([
+            item.name,
+            item.unit_size or "",
+            str(item.vendor) if getattr(item, "vendor", None) else "",
+            item.catalog or "",
+            str(item.manufacturer) if getattr(item, "manufacturer", None) else "",
+            item.manufacturer_number or "",
+            str(item.category) if getattr(item, "category", None) else "",
+        ])
+
+    return response
 
 
 class ItemView(generic.DetailView, generic.FormView):
