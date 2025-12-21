@@ -325,6 +325,37 @@ graph LR
 
 ---
 
+### ✨ Feature #2: Export Items as CSV
+
+Easily export the `Item` list to CSV from the web UI. The export respects the current filter/search parameters so you can download exactly the subset of items you're viewing.
+
+How to use:
+
+- Visit the Items page: `/inventory/items/`
+- Optionally use the search/filter fields at the top to narrow results
+- Click the `Export CSV` button to download `inventory_items.csv`
+
+Technical notes:
+
+- The endpoint is `GET /inventory/items/export/` (login required).
+- CSV columns: Description, Unit, Vendor, Catalog number, Manufacturer, Part Number, Category.
+- The export is implemented in `inventory/views.py` as `export_items_csv` and linked in `inventory/urls.py`.
+
+Developer / Testing:
+
+You can run the unit test added for this feature (requires Django test environment):
+
+```bash
+# From project root, ensure test settings are available and Django is installed
+pip install -r requirements-dev.txt
+export DJANGO_SETTINGS_MODULE=inventory.tests.settings
+pytest inventory/tests/test_views.py::test_export_items_csv_requires_login_and_returns_csv -q
+```
+
+If you prefer the PR to exclude tests or README changes, tell me and I will remove them before merging.
+
+---
+
 ## 🧪 Testing
 
 <div align="center">

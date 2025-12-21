@@ -174,3 +174,24 @@ def test_incomplete_orders_view_shows_only_incomplete_orders(
     assert incomplete_order in order_list
     assert complete_order not in order_list
     assert unplaced_order not in order_list
+
+
+@pytest.mark.django_db
+def test_export_items_csv_requires_login_and_returns_csv(client, user, item):
+    """The export endpoint should require login and return a CSV with item data."""
+    # Not logged in -> should redirect to login (302)
+    response = client.get(reverse("inventory:export_items_csv"))
+    assert response.status_code in (302, 401)
+
+    # Login and try again
+    client.login(username="testuser", password="testpass")
+    response = client.get(reverse("inventory:export_items_csv"))
+    assert response.status_code == 200
+    assert response["Content-Type"] == "text/csv"
+    assert "attachment; filename=" in response["Content-Disposition"]
+
+    content = response.content.decode("utf-8")
+    # Header row should be present
+    assert "Description" in content
+    # Item name should be present in CSV output
+    assert "Test Item" in content
