@@ -79,25 +79,25 @@ def test_index(client):
 
 @pytest.mark.django_db
 def test_order_list_at_desired_location(client):
-    response = client.get("/inventory/orders/")
+    response = client.get(reverse("inventory:orders"))
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
 def test_unplaced_order_list_at_desired_location(client):
-    response = client.get("/inventory/orders/unplaced/")
+    response = client.get(reverse("inventory:unplaced-orders"))
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
 def test_incomplete_order_list_at_desired_location(client):
-    response = client.get("/inventory/orders/incomplete/")
+    response = client.get(reverse("inventory:incomplete-orders"))
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
 def test_item_list_at_desired_location(client):
-    response = client.get("/inventory/items/")
+    response = client.get(reverse("inventory:items"))
     assert response.status_code == 200
 
 

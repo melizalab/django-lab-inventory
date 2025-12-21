@@ -28,6 +28,7 @@ COPY . /app/
 RUN pip install --upgrade pip && \
     pip install hatchling && \
     pip install -e . && \
+    pip install -r requirements-dev.txt && \
     pip install argon2-cffi psycopg2-binary
 
 EXPOSE 8003

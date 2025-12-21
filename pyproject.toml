@@ -45,7 +45,7 @@ django_find_project = false
 python_files = ["test_*.py", "*_test.py"]
 addopts = "-v --cov=inventory --cov-report=term-missing"
 testpaths = ["inventory/tests"]
-env_viles = [".env", ".test.env", "deploy.env"]
+env_files = [".env", ".test.env", "deploy.env"]
 
 [tool.ruff]
 line-length = 88

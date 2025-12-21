@@ -338,10 +338,8 @@ graph LR
 **If you're using Docker Compose (recommended for parity):**
 
 ```bash
-docker-compose up --build -d
-docker-compose exec web \
-  env DJANGO_SETTINGS_MODULE=inventory.tests.settings \
-  python -m pytest
+docker-compose up -d db
+docker-compose run --rm web pytest
 ```
 
 **If you're running tests directly on your host:** make sure PostgreSQL is running and these env vars are set:
@@ -365,6 +363,8 @@ python -m pytest
 ```
 
 > **Note**: Tests use settings from `inventory/tests/settings.py`
+
+**Local dev dependencies:** install with `pip install -r requirements-dev.txt` when running outside Docker.
 
 ---
 
