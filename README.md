@@ -242,24 +242,17 @@ EOF
 - Search and filtering with django-filter
 - Secure auth (Argon2 hashing, CSRF, session timeout, lockout)
 
-### ✨ New Features
+### What's New
 
-#### 1️⃣ QR-Assisted Quick Checkout 🎯
+#### Feature #1: QR Code Quick Checkout
 
-Streamline your laboratory equipment checkout process with QR code technology. Students and researchers can now checkout items instantly by scanning QR codes—no manual data entry required.
+We added a QR code system for equipment checkout. Lab members can now scan a QR code on any stock item to check it out - no need to navigate through menus or fill out forms. 
 
-**Key Benefits:**
-- ⚡ **Lightning-fast checkouts** - Scan and confirm in seconds
-- 📱 **Mobile-friendly** - Works on any device with a camera
-- 🔒 **Secure tracking** - Every checkout is logged with user, timestamp, and due date
-- 🎨 **Intuitive interface** - Clean, professional design for optimal user experience
+Each item gets its own unique QR code (using UUID tokens). When someone scans it with their phone, they just need to log in and set how many days they need the item. The system handles the rest - creates the checkout record, tracks who took what, and when it's due back.
 
-**How It Works:**
-1. Each stock item receives a unique QR code with an embedded secure token
-2. Users scan the QR code with their mobile device or camera
-3. After authentication, they specify the checkout duration (default: 7 days)
-4. The system creates a checkout record and provides instant confirmation
-5. Items can be tracked through their complete checkout lifecycle (out → returned)
+The whole process takes about 10 seconds instead of the usual manual entry workflow. Plus, you can scan codes from any device since it's just a regular web URL. Everything still goes through proper authentication, so there's no security compromise.
+
+Items track their status from checkout to return, making it easy to see what's currently out and who has it.
 
 ---
 
@@ -275,65 +268,53 @@ python -m pytest
 
 Uses settings from `inventory/tests/settings.py`.
 
-### Testing the QR Quick Checkout Feature
+### Testing the QR Checkout Feature
 
-The QR-assisted quick checkout feature includes comprehensive automated tests. To run them:
+There are automated tests included for the QR checkout system:
 
 ```bash
 # Run all tests
 python -m pytest
 
-# Run only QR checkout tests
+# Just the QR checkout tests
 python -m pytest inventory/tests/test_qr_quick_checkout.py -v
 
-# Run with coverage report
+# With coverage
 python -m pytest --cov=inventory --cov-report=html
 ```
 
-**Manual Testing Steps:**
+**To test it manually:**
 
-1. **Create a Stock Item with QR Code**
-   ```bash
-   python -m django shell --settings=inventory.tests.settings <<'EOF'
-   from inventory.models import StockItem
-   item = StockItem.objects.create(
-       name='Test Multimeter',
-       sku='TM-001',
-       description='Digital multimeter for testing'
-   )
-   print(f'QR URL: http://localhost:8003{item.get_qr_url()}')
-   print(f'QR Token: {item.qr_token}')
-   EOF
-   ```
+First, create a test item:
+```bash
+python -m django shell --settings=inventory.tests.settings <<'EOF'
+from inventory.models import StockItem
+item = StockItem.objects.create(
+    name='Test Multimeter',
+    sku='TM-001',
+    description='Digital multimeter for testing'
+)
+print(f'QR URL: http://localhost:8003{item.get_qr_url()}')
+print(f'QR Token: {item.qr_token}')
+EOF
+```
 
-2. **Access the Quick Checkout Interface**
-   - Navigate to the printed QR URL, or
-   - Manually visit: `http://localhost:8003/university-laboratory-system/quick-checkout/<token>/`
-   - Replace `<token>` with the UUID from step 1
+Then visit the URL that gets printed (or go to `http://localhost:8003/university-laboratory-system/quick-checkout/<token>/` with your token).
 
-3. **Test the Checkout Flow**
-   - Log in with any user credentials (e.g., `labuser` / `labuser123`)
-   - Specify the checkout duration (in days)
-   - Click "Checkout Item"
-   - Verify the success confirmation displays item details and due date
+Log in as any user (like `labuser`/`labuser123`), pick how many days you need the item, and hit checkout. You should see a confirmation page with the item details and due date.
 
-4. **Verify Checkout Records**
-   ```bash
-   python -m django shell --settings=inventory.tests.settings <<'EOF'
-   from inventory.models import CheckoutRecord
-   records = CheckoutRecord.objects.all()
-   for r in records:
-       print(f'{r.item.name} - {r.student.username} - Status: {r.status}')
-       print(f'  Due: {r.due_date}')
-   EOF
-   ```
+To check if it worked:
+```bash
+python -m django shell --settings=inventory.tests.settings <<'EOF'
+from inventory.models import CheckoutRecord
+records = CheckoutRecord.objects.all()
+for r in records:
+    print(f'{r.item.name} - {r.student.username} - Status: {r.status}')
+    print(f'  Due: {r.due_date}')
+EOF
+```
 
-**Test Coverage Includes:**
-- Authentication requirement for checkout
-- QR token validation
-- Checkout record creation with correct status
-- Due date calculation
-- User association with checkout records
+The tests cover login requirements, token validation, record creation, due date math, and user tracking.
 
 ---
 
