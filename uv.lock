@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.10"
 
 [[package]]
@@ -89,16 +89,16 @@ toml = [
 
 [[package]]
 name = "django"
-version = "4.2.17"
+version = "4.2.28"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asgiref" },
     { name = "sqlparse" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/63/58/709978ddf7e9393c0a89b57a5edbd764ee76eeea68697af3f77f3820980b/Django-4.2.17.tar.gz", hash = "sha256:6b56d834cc94c8b21a8f4e775064896be3b4a4ca387f2612d4406a5927cd2fdc", size = 10437674, upload-time = "2024-12-04T15:16:33.112Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fa/a9/25b75b11a4c7a6efe1661c181afe504992e0659ca6eedb72a065cdd91a25/django-4.2.28.tar.gz", hash = "sha256:a4b9cd881991add394cafa8bb3b11ad1742d1e1470ba99c3ef53dc540316ccfe", size = 10464933, upload-time = "2026-02-03T13:55:27.686Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5e/85/457360cb3de496382e35db4c2af054066df5c40e26df31400d0109a0500c/Django-4.2.17-py3-none-any.whl", hash = "sha256:3a93350214ba25f178d4045c0786c61573e7dbfa3c509b3551374f1e11ba8de0", size = 7993390, upload-time = "2024-12-04T15:16:27.478Z" },
+    { url = "https://files.pythonhosted.org/packages/68/20/6d0808bc7500a6c654eae17b53f791a50af2c3f3ac4f328cbec324948c31/django-4.2.28-py3-none-any.whl", hash = "sha256:49a23c1b83ef31525f8d71a57b040f91d34660edb3f086280a8519855655ed3c", size = 7995543, upload-time = "2026-02-03T13:55:09.798Z" },
 ]
 
 [[package]]
