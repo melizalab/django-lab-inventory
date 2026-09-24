@@ -1,6 +1,11 @@
 name: Build and publish distribution to pypi
-
-on: push
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
 
 jobs:
   build:
