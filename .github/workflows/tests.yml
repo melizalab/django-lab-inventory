@@ -47,7 +47,9 @@ jobs:
       env:
         DJANGO_VERSION: ${{ matrix.django-version }}
       run: |
-        uv sync --frozen
+        uv sync --frozen --group postgres
         uv add "Django~=${DJANGO_VERSION}"
     - name: Run tests on python ${{ matrix.python-version }}
+      env:
+        NBANK_TEST_DB: postgres
       run: uv run pytest        
