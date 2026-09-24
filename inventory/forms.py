@@ -8,17 +8,26 @@ from django.contrib.auth.models import User
 from inventory.models import Account, Item, Order, OrderAccount, OrderItem, Vendor
 
 
+def active_accounts():
+    """Returns all active (unexpired) accounts as of today"""
+    return Account.objects.exclude(expires_on__lt=datetime.date.today())
+
+
 class NewOrderForm(forms.ModelForm):
     name = forms.CharField(label="Order Name")
     requested_by = forms.ModelChoiceField(
         queryset=User.objects.filter(is_active=True), label="Requested by"
     )
     accounts = forms.ModelMultipleChoiceField(
-        queryset=Account.objects.exclude(expires_on__lt=datetime.date.today()),
+        queryset=Account.objects.none(),  # gets set in __init__
         required=False,
         widget=forms.CheckboxSelectMultiple,
         label="Accounts (select all that apply)",
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["accounts"].queryset = active_accounts()
 
     def save(self, commit=True):
         order = super().save(commit=commit)
@@ -36,7 +45,7 @@ class NewOrderForm(forms.ModelForm):
 
 class ConfirmOrderForm(forms.ModelForm):
     accounts = forms.ModelMultipleChoiceField(
-        queryset=Account.objects.exclude(expires_on__lt=datetime.date.today()),
+        queryset=Account.objects.none(),  # gets set in __init__
         required=False,
         widget=forms.CheckboxSelectMultiple,
         label="Accounts (select at least one)",
@@ -49,6 +58,7 @@ class ConfirmOrderForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["accounts"].queryset = active_accounts()
         if self.instance.pk:
             self.fields["accounts"].initial = self.instance.accounts.all()
 
@@ -106,12 +116,16 @@ class NewItemForm(forms.ModelForm):
 
 class NewOrderItemForm(forms.ModelForm):
     order = forms.ModelChoiceField(
-        queryset=Order.objects.not_placed(),
+        queryset=Order.objects.none(),  # gets set in __init__
         required=True,
         label="Choose an in-progress order",
     )
     units_purchased = forms.IntegerField(label="Number of units to order")
     cost = forms.DecimalField(label="Current price per unit")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["order"].queryset = Order.objects.not_placed()
 
     class Meta:
         model = OrderItem

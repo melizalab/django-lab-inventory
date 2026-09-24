@@ -1,4 +1,6 @@
 # -*- mode: python -*-
+import datetime
+
 import pytest
 from django.contrib.auth import get_user_model
 
@@ -227,3 +229,15 @@ def test_order_with_multiple_accounts(sentinel_user):
     assert order in account2.orders.all()
     assert order not in account3.orders.all()
     assert order.account_codes() == "1234, 5678"
+
+
+@pytest.mark.django_db
+def test_order_completed_on_date(sentinel_user):
+    """completed()/not_completed() should evaluate 'placed' on the given date"""
+    on_date = datetime.date.today() + datetime.timedelta(days=10)
+    order = Order.objects.create(name="future order", requested_by=sentinel_user)
+    order.mark_placed(on_date=on_date)
+
+    assert order not in Order.objects.completed()
+    assert order in Order.objects.completed(on_date=on_date)
+    assert order not in Order.objects.not_completed(on_date=on_date)

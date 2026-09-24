@@ -172,14 +172,14 @@ class OrderQuerySet(models.QuerySet):
 
     def completed(self, on_date: datetime.date | None = None):
         return (
-            self.placed()
+            self.placed(on_date)
             .with_counts(on_date)
             .filter(item_count=F("item_received_count"))
         )
 
     def not_completed(self, on_date: datetime.date | None = None):
         return (
-            self.placed()
+            self.placed(on_date)
             .with_counts(on_date)
             .filter(item_count__gt=F("item_received_count"))
         )

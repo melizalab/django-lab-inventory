@@ -1,12 +1,41 @@
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
 import datetime
+import types
 
 import pytest
 from django.contrib.auth.models import User
 
-from inventory.forms import ConfirmOrderForm
+from inventory import forms as inventory_forms
+from inventory import models as inventory_models
+from inventory.forms import (
+    ConfirmOrderForm,
+    NewOrderForm,
+    NewOrderItemForm,
+)
 from inventory.models import Account, Order
+
+
+@pytest.fixture
+def days_later(monkeypatch):
+    """Simulate a long-running server process. This is to check that form dates are not getting frozen on import. """
+
+    def advance(n_days):
+        later = datetime.date.today() + datetime.timedelta(days=n_days)
+
+        class FakeDate(datetime.date):
+            @classmethod
+            def today(cls):
+                return later
+
+        fake_datetime = types.SimpleNamespace(
+            date=FakeDate, timedelta=datetime.timedelta
+        )
+        monkeypatch.setattr(inventory_forms, "datetime", fake_datetime)
+        monkeypatch.setattr(inventory_models, "datetime", fake_datetime)
+        return later
+
+    return advance
 
 
 @pytest.fixture
@@ -112,3 +141,40 @@ def test_confirm_order_form_initializes_with_existing_accounts(order, user, acco
     order.accounts.add(account)
     form = ConfirmOrderForm(instance=order)
     assert list(form.fields["accounts"].initial) == list(order.accounts.all())
+
+
+@pytest.mark.django_db
+def test_new_order_item_form_order_choices_use_current_date(user, days_later):
+    """Orders placed after the process started must not be offered as in-progress"""
+    order = Order.objects.create(name="Placed Later", requested_by=user)
+    in_progress = Order.objects.create(name="In Progress", requested_by=user)
+    later = days_later(10)
+    order.mark_placed()
+    assert order.placed_on == later
+
+    form = NewOrderItemForm()
+    order_ids = [o.id for o in form.fields["order"].queryset]
+    assert in_progress.id in order_ids
+    assert order.id not in order_ids
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("form_class", [NewOrderForm, ConfirmOrderForm])
+def test_account_choices_use_current_date(form_class, user, days_later):
+    """Accounts that expired after the process started must not be offered"""
+    soon_expired = Account.objects.create(
+        code="SOON",
+        description="Expires soon",
+        expires_on=datetime.date.today() + datetime.timedelta(days=5),
+    )
+    still_valid = Account.objects.create(
+        code="LATER",
+        description="Expires much later",
+        expires_on=datetime.date.today() + datetime.timedelta(days=365),
+    )
+    days_later(10)
+
+    form = form_class()
+    account_ids = [acc.id for acc in form.fields["accounts"].queryset]
+    assert still_valid.id in account_ids
+    assert soon_expired.id not in account_ids

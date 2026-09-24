@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django-lab-inventory"
-version = "0.6.0"
+version = "0.6.1"
 description = "A simple Django app for managing lab inventory"
 readme = "README.rst"
 requires-python = ">=3.10"
